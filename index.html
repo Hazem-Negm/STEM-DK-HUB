@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STEM DK Material Hub | منصة المواد العلمية</title>
+    <!-- كود التوثيق الخاص بك -->
+    <meta name="google-site-verification" content="V2vLylp8_FxIdICy_EEwdqtk9FP50zRgrLyC7RVAN_0" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#05070a',
+                            card: '#0d1117',
+                            border: '#161b22',
+                            accent: '#6366f1',
+                            purple: '#a855f7',
+                            cyan: '#06b6d4'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Cairo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Dark Mode Setup (Default) */
+        html.dark body {
+            background-color: #05070a;
+            color: #e6edf3;
+        }
+        html.dark .theme-card {
+            background-color: #0d1117 !important;
+            border-color: #161b22 !important;
+        }
+        html.dark .theme-header {
+            background-color: rgba(5, 7, 10, 0.8) !important;
+            border-color: #161b22 !important;
+        }
+        html.dark .theme-text-main {
+            color: #ffffff !important;
+        }
+        html.dark .theme-text-sub {
+            color: #94a3b8 !important;
+        }
+        html.dark .theme-input {
+            background-color: #0d1117 !important;
+            border-color: #161b22 !important;
+            color: #e6edf3 !important;
+        }
+
+        /* Light Mode Setup */
+        html:not(.dark) body {
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        html:not(.dark) .theme-card {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+        html:not(.dark) .theme-header {
+            background-color: rgba(255, 255, 255, 0.85) !important;
+            border-color: #e2e8f0 !important;
+        }
+        html:not(.dark) .theme-text-main {
+            color: #0f172a !important;
+        }
+        html:not(.dark) .theme-text-sub {
+            color: #475569 !important;
+        }
+        html:not(.dark) .theme-input {
+            background-color: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+        }
+
+        .gradient-border {
+            border: 1px solid transparent;
+            background: linear-gradient(#0d1117, #0d1117) padding-box,
+                        linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(168, 85, 247, 0.1)) border-box;
+        }
+        html:not(.dark) .gradient-border {
+            background: linear-gradient(#ffffff, #ffffff) padding-box,
+                        linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(168, 85, 247, 0.2)) border-box;
+        }
+        .neon-glow {
+            box-shadow: 0 0 20px -3px rgba(99, 102, 241, 0.25);
+        }
+        .hero-pattern {
+            background-image: radial-gradient(rgba(99, 102, 241, 0.15) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+
+    <!-- Top Announcement Bar -->
+    <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white text-xs font-bold py-2 text-center tracking-wide">
+        🚀 المنصة الرسمية لمشاركة ملخصات وماتريال STEM الدقهلية | إعداد Hazem DK S'29
+    </div>
+
+    <!-- Header Section -->
+    <header class="sticky top-0 z-50 theme-header backdrop-blur-xl border-b transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="relative group">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl blur opacity-50 group-hover:opacity-100 transition duration-300"></div>
+                    <img src="https://lh3.googleusercontent.com/d/1-IrpNMt6vkEL-Gq8qkYCpvSeqRtKUq-e=w1000" alt="STEM DK Hub Logo" class="relative w-12 h-12 object-contain rounded-2xl theme-card p-1.5 border">
+                </div>
+                <div class="flex flex-col items-start" dir="ltr">
+                    <h1 class="text-xl font-black theme-text-main tracking-wide">
+                        STEM <span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">DK HUB</span>
+                    </h1>
+                    <p class="text-[11px] text-indigo-400 font-semibold tracking-wider">Created by Hazem DK S'29</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <!-- زر مفضلاتي -->
+                <button onclick="toggleBookmarksView()" id="bookmarkFilterBtn" title="المفضلة المحفوظة" class="p-2.5 rounded-xl theme-card border text-slate-300 hover:text-indigo-400 transition relative">
+                    <i class="fa-solid fa-bookmark text-amber-400"></i>
+                    <span id="bookmarkBadge" class="absolute -top-1 -right-1 bg-amber-500 text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
+                </button>
+
+                <!-- زر التبديل بين الوضع المظلم والواضح -->
+                <button onclick="toggleTheme()" id="themeToggleBtn" title="تغيير المظهر" class="p-2.5 rounded-xl theme-card border text-slate-300 hover:text-indigo-400 transition">
+                    <i class="fa-solid fa-moon text-indigo-400" id="themeIcon"></i>
+                </button>
+
+                <!-- مكان حساب المستخدم أو زر تسجيل الدخول -->
+                <div id="authContainer" class="flex items-center gap-3">
+                    <button onclick="loginWithGoogle()" class="flex items-center gap-2 bg-white hover:bg-gray-100 text-gray-800 text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-md">
+                        <i class="fa-brands fa-google text-red-500"></i>
+                        <span>تسجيل الدخول</span>
+                    </button>
+                </div>
+
+                <!-- زر إضافة مادة جديدة -->
+                <button onclick="toggleModal(true)" class="relative group overflow-hidden rounded-xl p-px font-bold text-xs">
+                    <span class="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600"></span>
+                    <span class="relative block px-5 py-2.5 rounded-[11px] theme-card transition duration-300 group-hover:bg-transparent theme-text-main group-hover:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-plus text-indigo-400 transition"></i>
+                        <span>إضافة مادة جديدة</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow w-full">
+        
+        <!-- Hero Section -->
+        <div class="relative overflow-hidden rounded-3xl theme-card border p-8 sm:p-12 mb-10 hero-pattern" dir="rtl">
+            <div class="absolute top-0 left-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="max-w-3xl relative z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold mb-4">
+                    <span class="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
+                    تحديثات المناهج الدراسية
+                </div>
+                <h2 class="text-3xl sm:text-5xl font-black theme-text-main leading-tight tracking-tight">
+                    مكتبة الماتريال الشاملة <br>
+                    <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">لطلاب مدرسة المتفوقين بالدقهلية</span>
+                </h2>
+                <p class="theme-text-sub text-sm sm:text-base mt-4 leading-relaxed font-medium">
+                    تصفح، حمل، وشارك الملازم والـ LOs والامتحانات السابقة بسهولة وبدون تعقيد.
+                </p>
+                
+                <!-- عداد الإحصائيات -->
+                <div class="mt-6 inline-flex items-center gap-3 bg-indigo-500/5 px-4 py-2 rounded-xl border border-indigo-500/20 text-xs theme-text-sub">
+                    <i class="fa-solid fa-folder-open text-indigo-400"></i>
+                    <span>إجمالي الماتريال المتاحة حالياً: <strong id="materialsCount" class="text-indigo-400 font-bold">0</strong> ملفات</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls & Filters -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8" dir="rtl">
+            <div class="relative">
+                <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" id="searchInput" oninput="renderMaterials()" placeholder="ابحث الماتريال..." class="w-full theme-input border rounded-xl pr-11 pl-4 py-3.5 text-sm placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition">
+            </div>
+
+            <div>
+                <select id="gradeFilter" onchange="renderMaterials()" class="w-full theme-input border text-sm font-semibold rounded-xl px-4 py-3.5 focus:outline-none focus:border-indigo-500 transition cursor-pointer">
+                    <option value="ALL">جميع الصفوف</option>
+                    <option value="Grade 10">Grade 10</option>
+                    <option value="Grade 11">Grade 11</option>
+                    <option value="Grade 12">Grade 12</option>
+                </select>
+            </div>
+
+            <div>
+                <select id="semesterFilter" onchange="renderMaterials()" class="w-full theme-input border text-sm font-semibold rounded-xl px-4 py-3.5 focus:outline-none focus:border-indigo-500 transition cursor-pointer">
+                    <option value="ALL">جميع الترمات</option>
+                    <option value="Semester 1">الترم الأول</option>
+                    <option value="Semester 2">الترم الثاني</option>
+                </select>
+            </div>
+
+            <div>
+                <select id="subjectFilter" onchange="renderMaterials()" class="w-full theme-input border text-sm font-semibold rounded-xl px-4 py-3.5 focus:outline-none focus:border-indigo-500 transition cursor-pointer">
+                    <option value="ALL">جميع المواد</option>
+                    <optgroup label="المواد العلمية والتكنولوجية">
+                        <option value="Physics">Physics</option>
+                        <option value="Chemistry">Chemistry</option>
+                        <option value="Biology">Biology</option>
+                        <option value="Pure Math">Pure Math</option>
+                        <option value="Mechanics">Mechanics</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Capstone">Capstone / FABLAB</option>
+                    </optgroup>
+                    <optgroup label="اللغات والمواد الأدبية">
+                        <option value="Arabic">اللغة العربية (Arabic)</option>
+                        <option value="English">English</option>
+                        <option value="French">اللغة الفرنسية (French)</option>
+                        <option value="German">اللغة الألمانية (German)</option>
+                        <option value="Italian">اللغة الإيطالية (Italian)</option>
+                        <option value="Spanish">اللغة الإسبانية (Spanish)</option>
+                        <option value="Social Studies">دراسات اجتماعية (Social Studies)</option>
+                        <option value="Humanities">Humanities</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div>
+                <select id="categoryFilter" onchange="renderMaterials()" class="w-full theme-input border text-sm font-semibold rounded-xl px-4 py-3.5 focus:outline-none focus:border-indigo-500 transition cursor-pointer">
+                    <option value="ALL">كل الأقسام</option>
+                    <option value="LO">LO Guides</option>
+                    <option value="Capstone">Capstone</option>
+                    <option value="Exams">امتحانات سابقة</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Cards Grid -->
+        <div id="materialsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" dir="rtl"></div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden text-center py-16 theme-card rounded-2xl border" dir="rtl">
+            <i class="fa-solid fa-box-open text-5xl text-slate-500 mb-3"></i>
+            <h3 class="text-lg font-bold theme-text-main">لم يتم العثور على أي نتائج</h3>
+            <p class="text-xs theme-text-sub mt-1">جرب كلمات بحث مختلفة أو قم بإزالة الفلاتر</p>
+        </div>
+    </main>
+
+    <!-- Modal Form -->
+    <div id="uploadModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center hidden p-4" dir="rtl">
+        <div class="theme-card border rounded-2xl w-full max-w-lg p-6 relative neon-glow">
+            <button onclick="toggleModal(false)" class="absolute top-4 left-4 text-slate-400 hover:text-indigo-400 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-lg font-bold theme-text-main mb-5 flex items-center gap-2">
+                <i class="fa-solid fa-file-circle-plus text-indigo-400"></i>
+                <span>رفع ماتريال جديدة</span>
+            </h3>
+            <form id="materialForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold theme-text-sub mb-1">اسم الماتريال *</label>
+                    <input type="text" id="titleInput" required placeholder="مثال: Physics Ch 1 LO Summary" class="w-full theme-input border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold theme-text-sub mb-1">الصف الدراسي *</label>
+                        <select id="gradeInput" required class="w-full theme-input border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                            <option value="Grade 10">Grade 10</option>
+                            <option value="Grade 11">Grade 11</option>
+                            <option value="Grade 12">Grade 12</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold theme-text-sub mb-1">المادة *</label>
+                        <select id="subjectInput" required class="w-full theme-input border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                            <optgroup label="المواد العلمية والتكنولوجية">
+                                <option value="Physics">Physics</option>
+                                <option value="Chemistry">Chemistry</option>
+                                <option value="Biology">Biology</option>
+                                <option value="Pure Math">Pure Math</option>
+                                <option value="Mechanics">Mechanics</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Capstone">Capstone / FABLAB</option>
+                            </optgroup>
+                            <optgroup label="اللغات والمواد الأدبية">
+                                <option value="Arabic">اللغة العربية (Arabic)</option>
+                                <option value="English">English</option>
+                                <option value="French">اللغة الفرنسية (French)</option>
+                                <option value="German">اللغة الألمانية (German)</option>
+                                <option value="Italian">اللغة الإيطالية (Italian)</option>
+                                <option value="Spanish">اللغة الإسبانية (Spanish)</option>
+                                <option value="Social Studies">دراسات اجتماعية (Social Studies)</option>
+                                <option value="Humanities">Humanities</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold theme-text-sub mb-1">الفصل الدراسي *</label>
+                        <select id="semesterInput" required class="w-full theme-input border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                            <option value="Semester 1">Semester 1</option>
+                            <option value="Semester 2">Semester 2</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold theme-text-sub mb-1">القسم *</label>
+                        <select id="categoryInput" required class="w-full theme-input border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                            <option value="LO">LO Guide</option>
+                            <option value="Capstone">Capstone</option>
+                            <option value="Exams">امتحانات سابقة</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold theme-text-sub mb-1">رابط الملف (Google Drive) *</label>
+                    <input type="url" id="linkInput" required placeholder="https://drive.google.com/..." class="w-full theme-input border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold theme-text-sub mb-1">وصف مختصر</label>
+                    <textarea id="descInput" rows="2" placeholder="تفاصيل بسيطة عن الماتريال..." class="w-full theme-input border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500"></textarea>
+                </div>
+                <div class="pt-2 flex justify-end gap-3">
+                    <button type="button" onclick="toggleModal(false)" class="px-4 py-2 bg-slate-700/30 text-slate-300 text-xs font-bold rounded-xl transition">إلغاء</button>
+                    <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl transition">حفظ ونشر</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 left-5 bg-indigo-600 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-lg border border-indigo-400 hidden transition duration-300 z-50 flex items-center gap-2">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toastMsg">تم النسخ بنجاح!</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-6 text-center text-xs theme-text-sub transition-colors duration-300" dir="rtl">
+        <p>Created with ❤️ for STEM Dakahlia Students | By Hazem DK S'29</p>
+    </footer>
+
+    <!-- Script Logic -->
+    <script>
+        let showOnlyBookmarks = false;
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (savedTheme === 'light') {
+                html.classList.remove('dark');
+                if(themeIcon) themeIcon.className = 'fa-solid fa-sun text-yellow-400';
+            } else {
+                html.classList.add('dark');
+                if(themeIcon) themeIcon.className = 'fa-solid fa-moon text-indigo-400';
+            }
+            updateBookmarkBadge();
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                if(themeIcon) themeIcon.className = 'fa-solid fa-sun text-yellow-400';
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                if(themeIcon) themeIcon.className = 'fa-solid fa-moon text-indigo-400';
+            }
+        }
+
+        const initialData = [
+            {
+                id: 1,
+                title: "توزيع منهج الرياضيات الأساسية",
+                grade: "Grade 10",
+                semester: "Semester 1",
+                subject: "Pure Math",
+                category: "LO",
+                link: "https://drive.google.com/file/d/1x5SDDwBz2ItFVmnA_AP4MPyUT5KQjNvC/view?usp=drive_link",
+                desc: "ملخص ومراجعة مادة الرياضيات المعتمد",
+                author: "Hazem DK S'29",
+                date: "2026-10-30",
+                featured: true
+            },
+            {
+                id: 2,
+                title: "Physics Mechanics LO 1 & 2 Guide",
+                grade: "Grade 10",
+                semester: "Semester 1",
+                subject: "Physics",
+                category: "LO",
+                link: "https://drive.google.com",
+                desc: "شرح شامل ومبسط لـ Newton's Laws مع حل تمارين.",
+                author: "Senior Team",
+                date: "2024-10-15",
+                featured: true
+            }
+        ];
+
+        function getMaterials() {
+            const stored = localStorage.getItem("stem_dk_materials_v9");
+            if (!stored) {
+                localStorage.setItem("stem_dk_materials_v9", JSON.stringify(initialData));
+                return initialData;
+            }
+            return JSON.parse(stored);
+        }
+
+        function getBookmarks() {
+            const saved = localStorage.getItem("stem_dk_bookmarks");
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        function toggleBookmark(id) {
+            let bookmarks = getBookmarks();
+            if (bookmarks.includes(id)) {
+                bookmarks = bookmarks.filter(b => b !== id);
+                showToast("تمت الإزالة من المفضلة");
+            } else {
+                bookmarks.push(id);
+                showToast("تمت الإضافة إلى المفضلة ⭐");
+            }
+            localStorage.setItem("stem_dk_bookmarks", JSON.stringify(bookmarks));
+            updateBookmarkBadge();
+            renderMaterials();
+        }
+
+        function updateBookmarkBadge() {
+            const bookmarks = getBookmarks();
+            const badge = document.getElementById("bookmarkBadge");
+            if (bookmarks.length > 0) {
+                badge.innerText = bookmarks.length;
+                badge.classList.remove("hidden");
+            } else {
+                badge.classList.add("hidden");
+            }
+        }
+
+        function toggleBookmarksView() {
+            showOnlyBookmarks = !showOnlyBookmarks;
+            const btn = document.getElementById("bookmarkFilterBtn");
+            if (showOnlyBookmarks) {
+                btn.classList.add("bg-amber-500/20", "border-amber-500");
+                showToast("عرض المفضلة المحفوظة فقط");
+            } else {
+                btn.classList.remove("bg-amber-500/20", "border-amber-500");
+                showToast("عرض كل الماتريال");
+            }
+            renderMaterials();
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            const toastMsg = document.getElementById("toastMsg");
+            toastMsg.innerText = message;
+            toast.classList.remove("hidden");
+            setTimeout(() => {
+                toast.classList.add("hidden");
+            }, 2500);
+        }
+
+        function copyLink(link) {
+            navigator.clipboard.writeText(link);
+            showToast("تم نسخ رابط الماتريال بنجاح!");
+        }
+
+        function deleteMaterial(id) {
+            if (confirm("هل أنت تأكد من إزالة هذه المادة من المنصة؟")) {
+                let materials = getMaterials();
+                materials = materials.filter(m => m.id !== id);
+                localStorage.setItem("stem_dk_materials_v9", JSON.stringify(materials));
+                renderMaterials();
+                showToast("تم حذف المادة بنجاح.");
+            }
+        }
+
+        function renderMaterials() {
+            const materials = getMaterials();
+            const bookmarks = getBookmarks();
+            const search = document.getElementById("searchInput").value.toLowerCase();
+            const gradeFilter = document.getElementById("gradeFilter").value;
+            const semFilter = document.getElementById("semesterFilter").value;
+            const subjectFilter = document.getElementById("subjectFilter").value;
+            const catFilter = document.getElementById("categoryFilter").value;
+
+            const grid = document.getElementById("materialsGrid");
+            const emptyState = document.getElementById("emptyState");
+            const countElem = document.getElementById("materialsCount");
+
+            if(countElem) countElem.innerText = materials.length;
+            grid.innerHTML = "";
+
+            const currentUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).name : null;
+
+            const filtered = materials.filter(m => {
+                if (showOnlyBookmarks && !bookmarks.includes(m.id)) return false;
+                const matchSearch = m.title.toLowerCase().includes(search) || m.desc.toLowerCase().includes(search);
+                const matchGrade = gradeFilter === "ALL" || m.grade === gradeFilter;
+                const matchSem = semFilter === "ALL" || m.semester === semFilter;
+                const matchSubject = subjectFilter === "ALL" || m.subject === subjectFilter;
+                const matchCat = catFilter === "ALL" || m.category === catFilter;
+                return matchSearch && matchGrade && matchSem && matchSubject && matchCat;
+            });
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove("hidden");
+                return;
+            } else {
+                emptyState.classList.add("hidden");
+            }
+
+            filtered.forEach(item => {
+                const canDelete = currentUser && (currentUser === item.author || currentUser === "Hazem DK S'29");
+                const isBookmarked = bookmarks.includes(item.id);
+                const card = document.createElement("div");
+                card.className = "gradient-border rounded-2xl p-5 flex flex-col justify-between hover:neon-glow transition duration-300 theme-card relative group";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex gap-1.5 flex-wrap">
+                                ${item.featured ? '<span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20"><i class="fa-solid fa-fire text-[10px] ml-1"></i>مميز</span>' : ''}
+                                <span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">${item.grade}</span>
+                                <span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">${item.subject || 'General'}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="toggleBookmark(${item.id})" class="text-xs ${isBookmarked ? 'text-amber-400' : 'text-slate-500 hover:text-amber-400'} transition p-1" title="حفظ في المفضلة">
+                                    <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
+                                </button>
+                                ${canDelete ? `<button onclick="deleteMaterial(${item.id})" class="text-xs text-red-400 hover:text-red-300 transition p-1" title="حذف المادة"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+                            </div>
+                        </div>
+                        <h3 class="text-sm font-bold theme-text-main mb-2">${item.title}</h3>
+                        <p class="text-xs theme-text-sub mb-5 leading-relaxed">${item.desc || 'لا يوجد وصف متاح'}</p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-800 flex items-center justify-between">
+                        <span class="text-[10px] theme-text-sub font-medium"><i class="fa-regular fa-user ml-1 text-indigo-400"></i>${item.author || 'Hazem'}</span>
+                        <div class="flex items-center gap-2">
+                            <button onclick="copyLink('${item.link}')" title="نسخ الرابط" class="p-2 text-xs theme-text-sub hover:text-indigo-400 theme-card border rounded-lg transition">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                            <a href="${item.link}" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-indigo-400 font-bold hover:text-white bg-indigo-500/10 hover:bg-indigo-600 px-3 py-1.5 rounded-lg transition">
+                                <span>فتح / تحميل</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleModal(show) {
+            if (show) {
+                const savedUser = localStorage.getItem('user');
+                if (!savedUser) {
+                    showToast("عفواً! يجب عليك تسجيل الدخول أولاً لتتمكن من إضافة ماتريال.");
+                    loginWithGoogle();
+                    return;
+                }
+            }
+            const modal = document.getElementById("uploadModal");
+            if (show) modal.classList.remove("hidden");
+            else modal.classList.add("hidden");
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const savedUser = localStorage.getItem('user');
+            
+            if (!savedUser) {
+                showToast("عفواً! يجب عليك تسجيل الدخول أولاً.");
+                toggleModal(false);
+                return;
+            }
+
+            const userData = JSON.parse(savedUser);
+            const authorName = userData.name || "Hazem DK S'29";
+
+            const newMaterial = {
+                id: Date.now(),
+                title: document.getElementById("titleInput").value,
+                grade: document.getElementById("gradeInput").value,
+                subject: document.getElementById("subjectInput").value,
+                semester: document.getElementById("semesterInput").value,
+                category: document.getElementById("categoryInput").value,
+                link: document.getElementById("linkInput").value,
+                desc: document.getElementById("descInput").value,
+                author: authorName,
+                date: new Date().toISOString().split('T')[0],
+                featured: false
+            };
+
+            const materials = getMaterials();
+            materials.unshift(newMaterial);
+            localStorage.setItem("stem_dk_materials_v9", JSON.stringify(materials));
+
+            document.getElementById("materialForm").reset();
+            toggleModal(false);
+            renderMaterials();
+            showToast("تم رفع ونشر الماتريال بنجاح!");
+        }
+
+        initTheme();
+        renderMaterials();
+    </script>
+
+    <!-- Google Custom Token Client Auth Logic -->
+    <script>
+        let tokenClient;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('user');
+            if (savedUser) {
+                showUserProfile(JSON.parse(savedUser));
+            }
+
+            if (window.google && window.google.accounts) {
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: '710155706496-t0iu67cj7qu3ovf432dcldguv862bhdp.apps.googleusercontent.com',
+                    scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+                    callback: (response) => {
+                        if (response && response.access_token) {
+                            fetchUserProfile(response.access_token);
+                        }
+                    },
+                });
+            }
+        });
+
+        function loginWithGoogle() {
+            if (tokenClient) {
+                tokenClient.requestAccessToken();
+            } else {
+                alert("جاري تحميل خدمات جوجل، حاول مرة أخرى بعد ثانية.");
+            }
+        }
+
+        function fetchUserProfile(accessToken) {
+            fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                headers: { 'Authorization': `Bearer ` + accessToken }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const userData = {
+                    name: data.name,
+                    picture: data.picture,
+                    email: data.email
+                };
+                localStorage.setItem('user', JSON.stringify(userData));
+                showUserProfile(userData);
+                renderMaterials();
+                showToast("تم تسجيل الدخول بنجاح أهلاً بك يا " + data.name);
+            })
+            .catch(error => {
+                console.error('Error fetching user info:', error);
+            });
+        }
+
+        function showUserProfile(user) {
+            const authContainer = document.getElementById('authContainer');
+            if (authContainer) {
+                authContainer.innerHTML = `
+                    <div class="flex items-center gap-2 theme-card px-3 py-1.5 rounded-full border">
+                        <img src="${user.picture}" alt="${user.name}" class="w-8 h-8 rounded-full border border-indigo-400">
+                        <span class="theme-text-main text-sm font-medium">${user.name}</span>
+                        <button onclick="logout()" class="text-xs text-red-400 hover:text-red-300 ml-2 bg-slate-800 px-2 py-1 rounded">خروج</button>
+                    </div>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('user');
+            location.reload();
+        }
+    </script>
+</body>
+</html>
