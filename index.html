@@ -174,14 +174,14 @@
             <div class="max-w-3xl relative z-10">
                 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold mb-4">
                     <span class="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
-                    تحديثات المناهج الدراسية
+                    تحديثات المناهج الدراسية (متصل بـ Firebase Real-time)
                 </div>
                 <h2 class="text-3xl sm:text-5xl font-black theme-text-main leading-tight tracking-tight">
                     مكتبة الماتريال الشاملة <br>
                     <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">لطلاب مدرسة المتفوقين بالدقهلية</span>
                 </h2>
                 <p class="theme-text-sub text-sm sm:text-base mt-4 leading-relaxed font-medium">
-                    تصفح، حمل، وشارك الملازم والـ LOs والامتحانات السابقة بسهولة وبدون تعقيد.
+                    تصفح، حمل، وشارك الملازم والـ LOs والامتحانات السابقة بسهولة وفي الوقت الحقيقي.
                 </p>
                 
                 <!-- عداد الإحصائيات -->
@@ -270,7 +270,7 @@
             </button>
             <h3 class="text-lg font-bold theme-text-main mb-5 flex items-center gap-2">
                 <i class="fa-solid fa-file-circle-plus text-indigo-400"></i>
-                <span>رفع ماتريال جديدة</span>
+                <span>رفع ماتريال جديدة (تفاعلي)</span>
             </h3>
             <form id="materialForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
                 <div>
@@ -338,7 +338,7 @@
                 </div>
                 <div class="pt-2 flex justify-end gap-3">
                     <button type="button" onclick="toggleModal(false)" class="px-4 py-2 bg-slate-700/30 text-slate-300 text-xs font-bold rounded-xl transition">إلغاء</button>
-                    <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl transition">حفظ ونشر</button>
+                    <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl transition">حفظ ونشر مباشر</button>
                 </div>
             </form>
         </div>
@@ -355,148 +355,54 @@
         <p>Created with ❤️ for STEM Dakahlia Students | By Hazem DK S'29</p>
     </footer>
 
-    <!-- Script Logic -->
-    <script>
+    <!-- Firebase SDK & Real-time Integration Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            deleteDoc,
+            doc,
+            onSnapshot, 
+            query, 
+            orderBy, 
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // إعدادات Firebase الخاصة بمشروعك
+        const firebaseConfig = {
+            apiKey: "AIzaSyBP_hbhMb9gR6lKhz3QudQd1Ra0hKGY4yo",
+            authDomain: "stem-dk-hub41.firebaseapp.com",
+            projectId: "stem-dk-hub41",
+            storageBucket: "stem-dk-hub41.firebasestorage.app",
+            messagingSenderId: "130029604348",
+            appId: "1:130029604348:web:bd5973b63229611804f679",
+            measurementId: "G-6TCXRP4033"
+        };
+
+        // تهيئة Firebase وتوصيل قاعدة البيانات
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const materialsRef = collection(db, "materials");
+
+        let liveMaterials = [];
         let showOnlyBookmarks = false;
 
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            const html = document.documentElement;
-            const themeIcon = document.getElementById('themeIcon');
-            
-            if (savedTheme === 'light') {
-                html.classList.remove('dark');
-                if(themeIcon) themeIcon.className = 'fa-solid fa-sun text-yellow-400';
-            } else {
-                html.classList.add('dark');
-                if(themeIcon) themeIcon.className = 'fa-solid fa-moon text-indigo-400';
-            }
-            updateBookmarkBadge();
-        }
-
-        function toggleTheme() {
-            const html = document.documentElement;
-            const themeIcon = document.getElementById('themeIcon');
-            
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                if(themeIcon) themeIcon.className = 'fa-solid fa-sun text-yellow-400';
-            } else {
-                html.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                if(themeIcon) themeIcon.className = 'fa-solid fa-moon text-indigo-400';
-            }
-        }
-
-        const initialData = [
-            {
-                id: 1,
-                title: "توزيع منهج الرياضيات الأساسية",
-                grade: "Grade 10",
-                semester: "Semester 1",
-                subject: "Pure Math",
-                category: "LO",
-                link: "https://drive.google.com/file/d/1x5SDDwBz2ItFVmnA_AP4MPyUT5KQjNvC/view?usp=drive_link",
-                desc: "ملخص ومراجعة مادة الرياضيات المعتمد",
-                author: "Hazem DK S'29",
-                date: "2026-10-30",
-                featured: true
-            },
-            {
-                id: 2,
-                title: "Physics Mechanics LO 1 & 2 Guide",
-                grade: "Grade 10",
-                semester: "Semester 1",
-                subject: "Physics",
-                category: "LO",
-                link: "https://drive.google.com",
-                desc: "شرح شامل ومبسط لـ Newton's Laws مع حل تمارين.",
-                author: "Senior Team",
-                date: "2024-10-15",
-                featured: true
-            }
-        ];
-
-        function getMaterials() {
-            const stored = localStorage.getItem("stem_dk_materials_v9");
-            if (!stored) {
-                localStorage.setItem("stem_dk_materials_v9", JSON.stringify(initialData));
-                return initialData;
-            }
-            return JSON.parse(stored);
-        }
-
-        function getBookmarks() {
-            const saved = localStorage.getItem("stem_dk_bookmarks");
-            return saved ? JSON.parse(saved) : [];
-        }
-
-        function toggleBookmark(id) {
-            let bookmarks = getBookmarks();
-            if (bookmarks.includes(id)) {
-                bookmarks = bookmarks.filter(b => b !== id);
-                showToast("تمت الإزالة من المفضلة");
-            } else {
-                bookmarks.push(id);
-                showToast("تمت الإضافة إلى المفضلة ⭐");
-            }
-            localStorage.setItem("stem_dk_bookmarks", JSON.stringify(bookmarks));
-            updateBookmarkBadge();
+        // دالة جلب الماتريال وعرضها بشكل حي (Real-time)
+        const q = query(materialsRef, orderBy("createdAt", "desc"));
+        onSnapshot(q, (snapshot) => {
+            liveMaterials = [];
+            snapshot.forEach((docSnap) => {
+                liveMaterials.push({ id: docSnap.id, ...docSnap.data() });
+            });
             renderMaterials();
-        }
+        }, (error) => {
+            console.error("خطأ في جلب البيانات من فايربيس: ", error);
+        });
 
-        function updateBookmarkBadge() {
-            const bookmarks = getBookmarks();
-            const badge = document.getElementById("bookmarkBadge");
-            if (bookmarks.length > 0) {
-                badge.innerText = bookmarks.length;
-                badge.classList.remove("hidden");
-            } else {
-                badge.classList.add("hidden");
-            }
-        }
-
-        function toggleBookmarksView() {
-            showOnlyBookmarks = !showOnlyBookmarks;
-            const btn = document.getElementById("bookmarkFilterBtn");
-            if (showOnlyBookmarks) {
-                btn.classList.add("bg-amber-500/20", "border-amber-500");
-                showToast("عرض المفضلة المحفوظة فقط");
-            } else {
-                btn.classList.remove("bg-amber-500/20", "border-amber-500");
-                showToast("عرض كل الماتريال");
-            }
-            renderMaterials();
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById("toast");
-            const toastMsg = document.getElementById("toastMsg");
-            toastMsg.innerText = message;
-            toast.classList.remove("hidden");
-            setTimeout(() => {
-                toast.classList.add("hidden");
-            }, 2500);
-        }
-
-        function copyLink(link) {
-            navigator.clipboard.writeText(link);
-            showToast("تم نسخ رابط الماتريال بنجاح!");
-        }
-
-        function deleteMaterial(id) {
-            if (confirm("هل أنت تأكد من إزالة هذه المادة من المنصة؟")) {
-                let materials = getMaterials();
-                materials = materials.filter(m => m.id !== id);
-                localStorage.setItem("stem_dk_materials_v9", JSON.stringify(materials));
-                renderMaterials();
-                showToast("تم حذف المادة بنجاح.");
-            }
-        }
-
-        function renderMaterials() {
-            const materials = getMaterials();
+        // جعل الدوال متاحة على مستوى نافذة المتصفح لتعمل الأزرار بسلاسة
+        window.renderMaterials = function() {
             const bookmarks = getBookmarks();
             const search = document.getElementById("searchInput").value.toLowerCase();
             const gradeFilter = document.getElementById("gradeFilter").value;
@@ -508,14 +414,14 @@
             const emptyState = document.getElementById("emptyState");
             const countElem = document.getElementById("materialsCount");
 
-            if(countElem) countElem.innerText = materials.length;
+            if(countElem) countElem.innerText = liveMaterials.length;
             grid.innerHTML = "";
 
             const currentUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).name : null;
 
-            const filtered = materials.filter(m => {
+            const filtered = liveMaterials.filter(m => {
                 if (showOnlyBookmarks && !bookmarks.includes(m.id)) return false;
-                const matchSearch = m.title.toLowerCase().includes(search) || m.desc.toLowerCase().includes(search);
+                const matchSearch = (m.title || "").toLowerCase().includes(search) || (m.desc || "").toLowerCase().includes(search);
                 const matchGrade = gradeFilter === "ALL" || m.grade === gradeFilter;
                 const matchSem = semFilter === "ALL" || m.semester === semFilter;
                 const matchSubject = subjectFilter === "ALL" || m.subject === subjectFilter;
@@ -540,14 +446,14 @@
                         <div class="flex items-center justify-between mb-3">
                             <div class="flex gap-1.5 flex-wrap">
                                 ${item.featured ? '<span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20"><i class="fa-solid fa-fire text-[10px] ml-1"></i>مميز</span>' : ''}
-                                <span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">${item.grade}</span>
+                                <span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">${item.grade || 'Grade'}</span>
                                 <span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">${item.subject || 'General'}</span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <button onclick="toggleBookmark(${item.id})" class="text-xs ${isBookmarked ? 'text-amber-400' : 'text-slate-500 hover:text-amber-400'} transition p-1" title="حفظ في المفضلة">
+                                <button onclick="toggleBookmark('${item.id}')" class="text-xs ${isBookmarked ? 'text-amber-400' : 'text-slate-500 hover:text-amber-400'} transition p-1" title="حفظ في المفضلة">
                                     <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
                                 </button>
-                                ${canDelete ? `<button onclick="deleteMaterial(${item.id})" class="text-xs text-red-400 hover:text-red-300 transition p-1" title="حذف المادة"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+                                ${canDelete ? `<button onclick="deleteMaterial('${item.id}')" class="text-xs text-red-400 hover:text-red-300 transition p-1" title="حذف المادة"><i class="fa-solid fa-trash-can"></i></button>` : ''}
                             </div>
                         </div>
                         <h3 class="text-sm font-bold theme-text-main mb-2">${item.title}</h3>
@@ -568,23 +474,10 @@
                 `;
                 grid.appendChild(card);
             });
-        }
+        };
 
-        function toggleModal(show) {
-            if (show) {
-                const savedUser = localStorage.getItem('user');
-                if (!savedUser) {
-                    showToast("عفواً! يجب عليك تسجيل الدخول أولاً لتتمكن من إضافة ماتريال.");
-                    loginWithGoogle();
-                    return;
-                }
-            }
-            const modal = document.getElementById("uploadModal");
-            if (show) modal.classList.remove("hidden");
-            else modal.classList.add("hidden");
-        }
-
-        function handleFormSubmit(event) {
+        // معالجة نموذج الرفع والإضافة إلى فايربيس
+        window.handleFormSubmit = async function(event) {
             event.preventDefault();
             const savedUser = localStorage.getItem('user');
             
@@ -598,7 +491,6 @@
             const authorName = userData.name || "Hazem DK S'29";
 
             const newMaterial = {
-                id: Date.now(),
                 title: document.getElementById("titleInput").value,
                 grade: document.getElementById("gradeInput").value,
                 subject: document.getElementById("subjectInput").value,
@@ -607,22 +499,145 @@
                 link: document.getElementById("linkInput").value,
                 desc: document.getElementById("descInput").value,
                 author: authorName,
-                date: new Date().toISOString().split('T')[0],
+                createdAt: serverTimestamp(),
                 featured: false
             };
 
-            const materials = getMaterials();
-            materials.unshift(newMaterial);
-            localStorage.setItem("stem_dk_materials_v9", JSON.stringify(materials));
+            try {
+                await addDoc(materialsRef, newMaterial);
+                document.getElementById("materialForm").reset();
+                toggleModal(false);
+                showToast("تم رفع ونشر الماتريال بنجاح للجميع!");
+            } catch (error) {
+                console.error("خطأ أثناء إضافة المستند: ", error);
+                showToast("حدث خطأ أثناء الرفع، تأكد من الاتصال.");
+            }
+        };
 
-            document.getElementById("materialForm").reset();
-            toggleModal(false);
-            renderMaterials();
-            showToast("تم رفع ونشر الماتريال بنجاح!");
+        // حذف الماتريال من قاعدة البيانات سحابياً
+        window.deleteMaterial = async function(id) {
+            if (confirm("هل أنت متأكد من إزالة هذه المادة من المنصة للجميع؟")) {
+                try {
+                    await deleteDoc(doc(db, "materials", id));
+                    showToast("تم حذف المادة بنجاح.");
+                } catch (error) {
+                    console.error("خطأ أثناء الحذف: ", error);
+                    showToast("فشل الحذف، حاول مرة أخرى.");
+                }
+            }
+        };
+
+        // دوال المساعدة والتصميم (Theme & Bookmarks)
+        window.initTheme = function() {
+            const savedTheme = localStorage.getItem('theme');
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (savedTheme === 'light') {
+                html.classList.remove('dark');
+                if(themeIcon) themeIcon.className = 'fa-solid fa-sun text-yellow-400';
+            } else {
+                html.classList.add('dark');
+                if(themeIcon) themeIcon.className = 'fa-solid fa-moon text-indigo-400';
+            }
+            updateBookmarkBadge();
+        };
+
+        window.toggleTheme = function() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                if(themeIcon) themeIcon.className = 'fa-solid fa-sun text-yellow-400';
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                if(themeIcon) themeIcon.className = 'fa-solid fa-moon text-indigo-400';
+            }
+        };
+
+        function getBookmarks() {
+            const saved = localStorage.getItem("stem_dk_bookmarks");
+            return saved ? JSON.parse(saved) : [];
         }
 
+        window.toggleBookmark = function(id) {
+            let bookmarks = getBookmarks();
+            if (bookmarks.includes(id)) {
+                bookmarks = bookmarks.filter(b => b !== id);
+                showToast("تمت الإزالة من المفضلة");
+            } else {
+                bookmarks.push(id);
+                showToast("تمت الإضافة إلى المفضلة ⭐");
+            }
+            localStorage.setItem("stem_dk_bookmarks", JSON.stringify(bookmarks));
+            updateBookmarkBadge();
+            renderMaterials();
+        };
+
+        function updateBookmarkBadge() {
+            const bookmarks = getBookmarks();
+            const badge = document.getElementById("bookmarkBadge");
+            if (badge) {
+                if (bookmarks.length > 0) {
+                    badge.innerText = bookmarks.length;
+                    badge.classList.remove("hidden");
+                } else {
+                    badge.classList.add("hidden");
+                }
+            }
+        }
+
+        window.toggleBookmarksView = function() {
+            showOnlyBookmarks = !showOnlyBookmarks;
+            const btn = document.getElementById("bookmarkFilterBtn");
+            if (showOnlyBookmarks) {
+                if(btn) btn.classList.add("bg-amber-500/20", "border-amber-500");
+                showToast("عرض المفضلة المحفوظة فقط");
+            } else {
+                if(btn) btn.classList.remove("bg-amber-500/20", "border-amber-500");
+                showToast("عرض كل الماتريال");
+            }
+            renderMaterials();
+        };
+
+        window.showToast = function(message) {
+            const toast = document.getElementById("toast");
+            const toastMsg = document.getElementById("toastMsg");
+            if(toast && toastMsg) {
+                toastMsg.innerText = message;
+                toast.classList.remove("hidden");
+                setTimeout(() => {
+                    toast.classList.add("hidden");
+                }, 2500);
+            }
+        };
+
+        window.copyLink = function(link) {
+            navigator.clipboard.writeText(link);
+            showToast("تم نسخ رابط الماتريال بنجاح!");
+        };
+
+        window.toggleModal = function(show) {
+            if (show) {
+                const savedUser = localStorage.getItem('user');
+                if (!savedUser) {
+                    showToast("عفواً! يجب عليك تسجيل الدخول أولاً لتتمكن من إضافة ماتريال.");
+                    loginWithGoogle();
+                    return;
+                }
+            }
+            const modal = document.getElementById("uploadModal");
+            if (modal) {
+                if (show) modal.classList.remove("hidden");
+                else modal.classList.add("hidden");
+            }
+        };
+
+        // تنفيذ التهيئة الأولية
         initTheme();
-        renderMaterials();
     </script>
 
     <!-- Google Custom Token Client Auth Logic -->
@@ -648,7 +663,7 @@
             }
         });
 
-        function loginWithGoogle() {
+        window.loginWithGoogle = function() {
             if (tokenClient) {
                 tokenClient.requestAccessToken();
             } else {
@@ -669,7 +684,7 @@
                 };
                 localStorage.setItem('user', JSON.stringify(userData));
                 showUserProfile(userData);
-                renderMaterials();
+                if(window.renderMaterials) window.renderMaterials();
                 showToast("تم تسجيل الدخول بنجاح أهلاً بك يا " + data.name);
             })
             .catch(error => {
@@ -690,7 +705,7 @@
             }
         }
 
-        function logout() {
+        window.logout = function() {
             localStorage.removeItem('user');
             location.reload();
         }
