@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STEM DK Material Hub | منصة المواد العلمية</title>
+    <title>STEM DK Material Hub | منصة المواد العلمية الشاملة</title>
     <!-- كود التوثيق الخاص بك -->
     <meta name="google-site-verification" content="V2vLylp8_FxIdICy_EEwdqtk9FP50zRgrLyC7RVAN_0" />
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -133,7 +133,7 @@
                 </div>
             </div>
             <div class="flex items-center gap-3">
-                <!-- زر مفضلاتي -->
+                <!-- زر المفضلة -->
                 <button onclick="toggleBookmarksView()" id="bookmarkFilterBtn" title="المفضلة المحفوظة" class="p-2.5 rounded-xl theme-card border text-slate-300 hover:text-indigo-400 transition relative">
                     <i class="fa-solid fa-bookmark text-amber-400"></i>
                     <span id="bookmarkBadge" class="absolute -top-1 -right-1 bg-amber-500 text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
@@ -174,7 +174,7 @@
             <div class="max-w-3xl relative z-10">
                 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold mb-4">
                     <span class="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
-                    تحديثات المناهج الدراسية (متصل بـ Firebase Real-time)
+                    تحديثات حية ومباشرة (Real-time Sync)
                 </div>
                 <h2 class="text-3xl sm:text-5xl font-black theme-text-main leading-tight tracking-tight">
                     مكتبة الماتريال الشاملة <br>
@@ -185,18 +185,24 @@
                 </p>
                 
                 <!-- عداد الإحصائيات -->
-                <div class="mt-6 inline-flex items-center gap-3 bg-indigo-500/5 px-4 py-2 rounded-xl border border-indigo-500/20 text-xs theme-text-sub">
-                    <i class="fa-solid fa-folder-open text-indigo-400"></i>
-                    <span>إجمالي الماتريال المتاحة حالياً: <strong id="materialsCount" class="text-indigo-400 font-bold">0</strong> ملفات</span>
+                <div class="mt-6 flex flex-wrap gap-4 text-xs theme-text-sub">
+                    <div class="inline-flex items-center gap-2 bg-indigo-500/5 px-4 py-2 rounded-xl border border-indigo-500/20">
+                        <i class="fa-solid fa-folder-open text-indigo-400"></i>
+                        <span>إجمالي الماتريال: <strong id="materialsCount" class="text-indigo-400 font-bold">0</strong> ملفات</span>
+                    </div>
+                    <div class="inline-flex items-center gap-2 bg-purple-500/5 px-4 py-2 rounded-xl border border-purple-500/20">
+                        <i class="fa-solid fa-heart text-pink-500"></i>
+                        <span>إجمالي التفاعلات: <strong id="totalLikesCount" class="text-purple-400 font-bold">0</strong> إعجاب</span>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Controls & Filters -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8" dir="rtl">
-            <div class="relative">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 mb-8" dir="rtl">
+            <div class="relative lg:col-span-2">
                 <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" id="searchInput" oninput="renderMaterials()" placeholder="ابحث الماتريال..." class="w-full theme-input border rounded-xl pr-11 pl-4 py-3.5 text-sm placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition">
+                <input type="text" id="searchInput" oninput="renderMaterials()" placeholder="ابحث باسم الماتريال أو الوصف..." class="w-full theme-input border rounded-xl pr-11 pl-4 py-3.5 text-sm placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition">
             </div>
 
             <div>
@@ -251,6 +257,23 @@
             </div>
         </div>
 
+        <!-- Sorting & Quick Action Bar -->
+        <div class="flex items-center justify-between mb-6 pb-2 border-b border-slate-800/50" dir="rtl">
+            <div class="flex items-center gap-2 text-xs theme-text-sub font-semibold">
+                <i class="fa-solid fa-sort text-indigo-400"></i>
+                <span>ترتيب حسب:</span>
+                <select id="sortByInput" onchange="renderMaterials()" class="bg-transparent theme-text-main font-bold focus:outline-none cursor-pointer">
+                    <option value="NEWEST">الأحدث إضافة</option>
+                    <option value="OLDEST">الأقدم إضافة</option>
+                    <option value="LIKES">الأكثر تفاعلاً ❤️</option>
+                </select>
+            </div>
+            <button onclick="resetFilters()" class="text-xs text-indigo-400 hover:text-indigo-300 font-bold transition flex items-center gap-1">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span>إعادة ضبط الفلاتر</span>
+            </button>
+        </div>
+
         <!-- Cards Grid -->
         <div id="materialsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" dir="rtl"></div>
 
@@ -270,7 +293,7 @@
             </button>
             <h3 class="text-lg font-bold theme-text-main mb-5 flex items-center gap-2">
                 <i class="fa-solid fa-file-circle-plus text-indigo-400"></i>
-                <span>رفع ماتريال جديدة (تفاعلي)</span>
+                <span>رفع ماتريال جديدة (مباشر)</span>
             </h3>
             <form id="materialForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
                 <div>
@@ -363,6 +386,8 @@
             collection, 
             addDoc, 
             deleteDoc,
+            updateDoc,
+            increment,
             doc,
             onSnapshot, 
             query, 
@@ -370,7 +395,7 @@
             serverTimestamp 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // إعدادات Firebase الخاصة بمشروعك
+        // إعدادات Firebase الخاص بك
         const firebaseConfig = {
             apiKey: "AIzaSyBP_hbhMb9gR6lKhz3QudQd1Ra0hKGY4yo",
             authDomain: "stem-dk-hub41.firebaseapp.com",
@@ -381,7 +406,7 @@
             measurementId: "G-6TCXRP4033"
         };
 
-        // تهيئة Firebase وتوصيل قاعدة البيانات
+        // تهيئة Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const materialsRef = collection(db, "materials");
@@ -389,19 +414,31 @@
         let liveMaterials = [];
         let showOnlyBookmarks = false;
 
-        // دالة جلب الماتريال وعرضها بشكل حي (Real-time)
+        // الاستماع المباشر للتعديلات في الوقت الحقيقي
         const q = query(materialsRef, orderBy("createdAt", "desc"));
         onSnapshot(q, (snapshot) => {
             liveMaterials = [];
+            let totalLikes = 0;
             snapshot.forEach((docSnap) => {
-                liveMaterials.push({ id: docSnap.id, ...docSnap.data() });
+                const data = docSnap.data();
+                liveMaterials.push({ id: docSnap.id, ...data });
+                totalLikes += (data.likes || 0);
             });
+            const likesElem = document.getElementById("totalLikesCount");
+            if(likesElem) likesElem.innerText = totalLikes;
             renderMaterials();
         }, (error) => {
-            console.error("خطأ في جلب البيانات من فايربيس: ", error);
+            console.error("خطأ فايربيس: ", error);
         });
 
-        // جعل الدوال متاحة على مستوى نافذة المتصفح لتعمل الأزرار بسلاسة
+        // تنسيق التاريخ باللغة العربية
+        function formatDate(timestamp) {
+            if (!timestamp) return "الآن";
+            const date = timestamp.seconds ? new Date(timestamp.seconds * 1000) : new Date(timestamp);
+            return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        // عرض المواد المفلترة والمنظمة
         window.renderMaterials = function() {
             const bookmarks = getBookmarks();
             const search = document.getElementById("searchInput").value.toLowerCase();
@@ -409,6 +446,7 @@
             const semFilter = document.getElementById("semesterFilter").value;
             const subjectFilter = document.getElementById("subjectFilter").value;
             const catFilter = document.getElementById("categoryFilter").value;
+            const sortBy = document.getElementById("sortByInput").value;
 
             const grid = document.getElementById("materialsGrid");
             const emptyState = document.getElementById("emptyState");
@@ -419,7 +457,7 @@
 
             const currentUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).name : null;
 
-            const filtered = liveMaterials.filter(m => {
+            let filtered = liveMaterials.filter(m => {
                 if (showOnlyBookmarks && !bookmarks.includes(m.id)) return false;
                 const matchSearch = (m.title || "").toLowerCase().includes(search) || (m.desc || "").toLowerCase().includes(search);
                 const matchGrade = gradeFilter === "ALL" || m.grade === gradeFilter;
@@ -428,6 +466,13 @@
                 const matchCat = catFilter === "ALL" || m.category === catFilter;
                 return matchSearch && matchGrade && matchSem && matchSubject && matchCat;
             });
+
+            // الترتيب حسب الخيار المحدد
+            if (sortBy === "LIKES") {
+                filtered.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+            } else if (sortBy === "OLDEST") {
+                filtered.sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+            } // الافتراضي NEWEST مركب من الاستعلام الأساسي
 
             if (filtered.length === 0) {
                 emptyState.classList.remove("hidden");
@@ -459,13 +504,23 @@
                         <h3 class="text-sm font-bold theme-text-main mb-2">${item.title}</h3>
                         <p class="text-xs theme-text-sub mb-5 leading-relaxed">${item.desc || 'لا يوجد وصف متاح'}</p>
                     </div>
-                    <div class="pt-3 border-t border-slate-800 flex items-center justify-between">
-                        <span class="text-[10px] theme-text-sub font-medium"><i class="fa-regular fa-user ml-1 text-indigo-400"></i>${item.author || 'Hazem'}</span>
+                    <div>
+                        <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] theme-text-sub font-medium mb-3">
+                            <div class="flex flex-col">
+                                <span class="text-indigo-400 font-semibold"><i class="fa-regular fa-user ml-1"></i>${item.author || 'Hazem'}</span>
+                                <span class="text-[10px] text-slate-400 mt-0.5"><i class="fa-regular fa-calendar ml-1 text-purple-400"></i>${formatDate(item.createdAt)}</span>
+                            </div>
+                            <!-- زر الإعجاب الحقيقي المباشر -->
+                            <button onclick="likeMaterial('${item.id}')" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-pink-500/10 hover:bg-pink-500/20 text-pink-400 border border-pink-500/20 transition">
+                                <i class="fa-solid fa-heart text-xs"></i>
+                                <span class="font-bold text-xs">${item.likes || 0}</span>
+                            </button>
+                        </div>
                         <div class="flex items-center gap-2">
                             <button onclick="copyLink('${item.link}')" title="نسخ الرابط" class="p-2 text-xs theme-text-sub hover:text-indigo-400 theme-card border rounded-lg transition">
                                 <i class="fa-regular fa-copy"></i>
                             </button>
-                            <a href="${item.link}" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-indigo-400 font-bold hover:text-white bg-indigo-500/10 hover:bg-indigo-600 px-3 py-1.5 rounded-lg transition">
+                            <a href="${item.link}" target="_blank" class="w-full text-center inline-flex items-center justify-center gap-1.5 text-xs text-indigo-400 font-bold hover:text-white bg-indigo-500/10 hover:bg-indigo-600 px-3 py-2 rounded-lg transition">
                                 <span>فتح / تحميل</span>
                                 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                             </a>
@@ -476,7 +531,35 @@
             });
         };
 
-        // معالجة نموذج الرفع والإضافة إلى فايربيس
+        // ميزة الإعجاب التفاعلي بزيادة العدد سحابياً
+        window.likeMaterial = async function(id) {
+            try {
+                const docRef = doc(db, "materials", id);
+                await updateDoc(docRef, {
+                    likes: increment(1)
+                });
+                showToast("شغال! تم تسجيل إعجابك ❤️");
+            } catch (error) {
+                console.error("خطأ في تسجيل الإعجاب: ", error);
+            }
+        };
+
+        // إعادة ضبط جميع الفلاتر بنقرة واحدة
+        window.resetFilters = function() {
+            document.getElementById("searchInput").value = "";
+            document.getElementById("gradeFilter").value = "ALL";
+            document.getElementById("semesterFilter").value = "ALL";
+            document.getElementById("subjectFilter").value = "ALL";
+            document.getElementById("categoryFilter").value = "ALL";
+            document.getElementById("sortByInput").value = "NEWEST";
+            showOnlyBookmarks = false;
+            const btn = document.getElementById("bookmarkFilterBtn");
+            if(btn) btn.classList.remove("bg-amber-500/20", "border-amber-500");
+            renderMaterials();
+            showToast("تمت إعادة ضبط جميع الفلاتر بنجاح");
+        };
+
+        // إضافة مادة جديدة إلى Firebase
         window.handleFormSubmit = async function(event) {
             event.preventDefault();
             const savedUser = localStorage.getItem('user');
@@ -500,6 +583,7 @@
                 desc: document.getElementById("descInput").value,
                 author: authorName,
                 createdAt: serverTimestamp(),
+                likes: 0,
                 featured: false
             };
 
@@ -509,25 +593,24 @@
                 toggleModal(false);
                 showToast("تم رفع ونشر الماتريال بنجاح للجميع!");
             } catch (error) {
-                console.error("خطأ أثناء إضافة المستند: ", error);
-                showToast("حدث خطأ أثناء الرفع، تأكد من الاتصال.");
+                console.error("خطأ الرفع: ", error);
+                showToast("حدث خطأ أثناء الرفع.");
             }
         };
 
-        // حذف الماتريال من قاعدة البيانات سحابياً
+        // حذف مادة من Firebase
         window.deleteMaterial = async function(id) {
             if (confirm("هل أنت متأكد من إزالة هذه المادة من المنصة للجميع؟")) {
                 try {
                     await deleteDoc(doc(db, "materials", id));
                     showToast("تم حذف المادة بنجاح.");
                 } catch (error) {
-                    console.error("خطأ أثناء الحذف: ", error);
-                    showToast("فشل الحذف، حاول مرة أخرى.");
+                    console.error("خطأ الحذف: ", error);
                 }
             }
         };
 
-        // دوال المساعدة والتصميم (Theme & Bookmarks)
+        // إدارة المظهر والمفضلة
         window.initTheme = function() {
             const savedTheme = localStorage.getItem('theme');
             const html = document.documentElement;
@@ -636,7 +719,6 @@
             }
         };
 
-        // تنفيذ التهيئة الأولية
         initTheme();
     </script>
 
