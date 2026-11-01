@@ -113,8 +113,9 @@
 <body class="min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
 
     <!-- Top Announcement Bar -->
-    <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white text-xs font-bold py-2 text-center tracking-wide">
-        🚀 المنصة الرسمية لمشاركة ملخصات وماتريال STEM الدقهلية | إعداد Hazem DK S'29
+    <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white text-xs font-bold py-2 text-center tracking-wide flex items-center justify-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>🚀 المنصة الرسمية لمشاركة ملخصات وماتريال STEM الدقهلية | إعداد Hazem DK S'29</span>
     </div>
 
     <!-- Header Section -->
@@ -133,7 +134,7 @@
                 </div>
             </div>
             <div class="flex items-center gap-3">
-                <!-- زر المفضلة -->
+                <!-- زر مفضلاتي -->
                 <button onclick="toggleBookmarksView()" id="bookmarkFilterBtn" title="المفضلة المحفوظة" class="p-2.5 rounded-xl theme-card border text-slate-300 hover:text-indigo-400 transition relative">
                     <i class="fa-solid fa-bookmark text-amber-400"></i>
                     <span id="bookmarkBadge" class="absolute -top-1 -right-1 bg-amber-500 text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
@@ -174,7 +175,7 @@
             <div class="max-w-3xl relative z-10">
                 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold mb-4">
                     <span class="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
-                    تحديثات حية ومباشرة (Real-time Sync)
+                    تحديثات المناهج الدراسية (مزامنة حية)
                 </div>
                 <h2 class="text-3xl sm:text-5xl font-black theme-text-main leading-tight tracking-tight">
                     مكتبة الماتريال الشاملة <br>
@@ -258,8 +259,8 @@
         </div>
 
         <!-- Sorting & Quick Action Bar -->
-        <div class="flex items-center justify-between mb-6 pb-2 border-b border-slate-800/50" dir="rtl">
-            <div class="flex items-center gap-2 text-xs theme-text-sub font-semibold">
+        <div class="flex items-center justify-between mb-6 pb-2 border-b border-slate-800/50 text-xs" dir="rtl">
+            <div class="flex items-center gap-2 theme-text-sub font-semibold">
                 <i class="fa-solid fa-sort text-indigo-400"></i>
                 <span>ترتيب حسب:</span>
                 <select id="sortByInput" onchange="renderMaterials()" class="bg-transparent theme-text-main font-bold focus:outline-none cursor-pointer">
@@ -268,7 +269,7 @@
                     <option value="LIKES">الأكثر تفاعلاً ❤️</option>
                 </select>
             </div>
-            <button onclick="resetFilters()" class="text-xs text-indigo-400 hover:text-indigo-300 font-bold transition flex items-center gap-1">
+            <button onclick="resetFilters()" class="text-indigo-400 hover:text-indigo-300 font-bold transition flex items-center gap-1">
                 <i class="fa-solid fa-rotate-right"></i>
                 <span>إعادة ضبط الفلاتر</span>
             </button>
@@ -293,7 +294,7 @@
             </button>
             <h3 class="text-lg font-bold theme-text-main mb-5 flex items-center gap-2">
                 <i class="fa-solid fa-file-circle-plus text-indigo-400"></i>
-                <span>رفع ماتريال جديدة (مباشر)</span>
+                <span>رفع ماتريال جديدة (نشر مباشر)</span>
             </h3>
             <form id="materialForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
                 <div>
@@ -370,7 +371,7 @@
     <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-5 left-5 bg-indigo-600 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-lg border border-indigo-400 hidden transition duration-300 z-50 flex items-center gap-2">
         <i class="fa-solid fa-circle-check"></i>
-        <span id="toastMsg">تم النسخ بنجاح!</span>
+        <span id="toastMsg">تم التحديث بنجاح!</span>
     </div>
 
     <!-- Footer -->
@@ -395,7 +396,7 @@
             serverTimestamp 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // إعدادات Firebase الخاص بك
+        // إعدادات Firebase الخاصة بمشروعك
         const firebaseConfig = {
             apiKey: "AIzaSyBP_hbhMb9gR6lKhz3QudQd1Ra0hKGY4yo",
             authDomain: "stem-dk-hub41.firebaseapp.com",
@@ -406,39 +407,51 @@
             measurementId: "G-6TCXRP4033"
         };
 
-        // تهيئة Firebase
+        // تهيئة Firebase وتوصيل قاعدة البيانات
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const materialsRef = collection(db, "materials");
 
         let liveMaterials = [];
+        let isFirstLoad = true;
         let showOnlyBookmarks = false;
 
-        // الاستماع المباشر للتعديلات في الوقت الحقيقي
+        // دالة جلب الماتريال والتفاعل الحي المباشر (Real-time Sync)
         const q = query(materialsRef, orderBy("createdAt", "desc"));
         onSnapshot(q, (snapshot) => {
+            const previousCount = liveMaterials.length;
             liveMaterials = [];
             let totalLikes = 0;
+            
             snapshot.forEach((docSnap) => {
                 const data = docSnap.data();
                 liveMaterials.push({ id: docSnap.id, ...data });
                 totalLikes += (data.likes || 0);
             });
+
+            // إشعار حي للطلاب عند إضافة مادة جديدة من شخص آخر
+            if (!isFirstLoad && liveMaterials.length > previousCount) {
+                const newestItem = liveMaterials[0];
+                showToast(`🚀 تم نشر مادة جديدة: ${newestItem.title || 'مادة جديدة'}`);
+            }
+            isFirstLoad = false;
+
             const likesElem = document.getElementById("totalLikesCount");
             if(likesElem) likesElem.innerText = totalLikes;
+
             renderMaterials();
         }, (error) => {
-            console.error("خطأ فايربيس: ", error);
+            console.error("خطأ في جلب البيانات من فايربيس: ", error);
         });
 
-        // تنسيق التاريخ باللغة العربية
+        // تحويل التاريخ إلى صيغة عربية مبسطة
         function formatDate(timestamp) {
             if (!timestamp) return "الآن";
             const date = timestamp.seconds ? new Date(timestamp.seconds * 1000) : new Date(timestamp);
             return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
         }
 
-        // عرض المواد المفلترة والمنظمة
+        // عرض كروت الماتريال بناءً على الفلاتر والترتيب
         window.renderMaterials = function() {
             const bookmarks = getBookmarks();
             const search = document.getElementById("searchInput").value.toLowerCase();
@@ -467,12 +480,12 @@
                 return matchSearch && matchGrade && matchSem && matchSubject && matchCat;
             });
 
-            // الترتيب حسب الخيار المحدد
+            // تطبيق خيارات الترتيب
             if (sortBy === "LIKES") {
                 filtered.sort((a, b) => (b.likes || 0) - (a.likes || 0));
             } else if (sortBy === "OLDEST") {
                 filtered.sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
-            } // الافتراضي NEWEST مركب من الاستعلام الأساسي
+            }
 
             if (filtered.length === 0) {
                 emptyState.classList.remove("hidden");
@@ -531,7 +544,7 @@
             });
         };
 
-        // ميزة الإعجاب التفاعلي بزيادة العدد سحابياً
+        // زيادة زر الإعجاب حياً في Firebase
         window.likeMaterial = async function(id) {
             try {
                 const docRef = doc(db, "materials", id);
@@ -559,7 +572,7 @@
             showToast("تمت إعادة ضبط جميع الفلاتر بنجاح");
         };
 
-        // إضافة مادة جديدة إلى Firebase
+        // معالجة نموذج الرفع والإضافة السحابية
         window.handleFormSubmit = async function(event) {
             event.preventDefault();
             const savedUser = localStorage.getItem('user');
@@ -593,24 +606,25 @@
                 toggleModal(false);
                 showToast("تم رفع ونشر الماتريال بنجاح للجميع!");
             } catch (error) {
-                console.error("خطأ الرفع: ", error);
-                showToast("حدث خطأ أثناء الرفع.");
+                console.error("خطأ أثناء إضافة المستند: ", error);
+                showToast("حدث خطأ أثناء الرفع، تأكد من الاتصال.");
             }
         };
 
-        // حذف مادة من Firebase
+        // حذف الماتريال سحابياً
         window.deleteMaterial = async function(id) {
             if (confirm("هل أنت متأكد من إزالة هذه المادة من المنصة للجميع؟")) {
                 try {
                     await deleteDoc(doc(db, "materials", id));
                     showToast("تم حذف المادة بنجاح.");
                 } catch (error) {
-                    console.error("خطأ الحذف: ", error);
+                    console.error("خطأ أثناء الحذف: ", error);
+                    showToast("فشل الحذف، حاول مرة أخرى.");
                 }
             }
         };
 
-        // إدارة المظهر والمفضلة
+        // المظهر والمفضلة
         window.initTheme = function() {
             const savedTheme = localStorage.getItem('theme');
             const html = document.documentElement;
@@ -694,7 +708,7 @@
                 toast.classList.remove("hidden");
                 setTimeout(() => {
                     toast.classList.add("hidden");
-                }, 2500);
+                }, 3000);
             }
         };
 
