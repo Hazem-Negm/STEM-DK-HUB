@@ -396,7 +396,6 @@
             serverTimestamp 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // إعدادات Firebase الخاصة بمشروعك
         const firebaseConfig = {
             apiKey: "AIzaSyBP_hbhMb9gR6lKhz3QudQd1Ra0hKGY4yo",
             authDomain: "stem-dk-hub41.firebaseapp.com",
@@ -407,7 +406,6 @@
             measurementId: "G-6TCXRP4033"
         };
 
-        // تهيئة Firebase وتوصيل قاعدة البيانات
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const materialsRef = collection(db, "materials");
@@ -416,7 +414,12 @@
         let isFirstLoad = true;
         let showOnlyBookmarks = false;
 
-        // دالة جلب الماتريال والتفاعل الحي المباشر (Real-time Sync)
+        // إدارة الإعجابات المحفوظة محلياً (لكل مستخدم مرة واحدة)
+        function getLikedPosts() {
+            const saved = localStorage.getItem("stem_dk_liked_posts");
+            return saved ? JSON.parse(saved) : [];
+        }
+
         const q = query(materialsRef, orderBy("createdAt", "desc"));
         onSnapshot(q, (snapshot) => {
             const previousCount = liveMaterials.length;
@@ -429,7 +432,6 @@
                 totalLikes += (data.likes || 0);
             });
 
-            // إشعار حي للطلاب عند إضافة مادة جديدة من شخص آخر
             if (!isFirstLoad && liveMaterials.length > previousCount) {
                 const newestItem = liveMaterials[0];
                 showToast(`🚀 تم نشر مادة جديدة: ${newestItem.title || 'مادة جديدة'}`);
@@ -441,19 +443,18 @@
 
             renderMaterials();
         }, (error) => {
-            console.error("خطأ في جلب البيانات من فايربيس: ", error);
+            console.error("خطأ فايربيس: ", error);
         });
 
-        // تحويل التاريخ إلى صيغة عربية مبسطة
         function formatDate(timestamp) {
             if (!timestamp) return "الآن";
             const date = timestamp.seconds ? new Date(timestamp.seconds * 1000) : new Date(timestamp);
             return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
         }
 
-        // عرض كروت الماتريال بناءً على الفلاتر والترتيب
         window.renderMaterials = function() {
             const bookmarks = getBookmarks();
+            const likedPosts = getLikedPosts();
             const search = document.getElementById("searchInput").value.toLowerCase();
             const gradeFilter = document.getElementById("gradeFilter").value;
             const semFilter = document.getElementById("semesterFilter").value;
@@ -480,7 +481,6 @@
                 return matchSearch && matchGrade && matchSem && matchSubject && matchCat;
             });
 
-            // تطبيق خيارات الترتيب
             if (sortBy === "LIKES") {
                 filtered.sort((a, b) => (b.likes || 0) - (a.likes || 0));
             } else if (sortBy === "OLDEST") {
@@ -497,6 +497,8 @@
             filtered.forEach(item => {
                 const canDelete = currentUser && (currentUser === item.author || currentUser === "Hazem DK S'29");
                 const isBookmarked = bookmarks.includes(item.id);
+                const isLiked = likedPosts.includes(item.id);
+                
                 const card = document.createElement("div");
                 card.className = "gradient-border rounded-2xl p-5 flex flex-col justify-between hover:neon-glow transition duration-300 theme-card relative group";
                 card.innerHTML = `
@@ -523,9 +525,10 @@
                                 <span class="text-indigo-400 font-semibold"><i class="fa-regular fa-user ml-1"></i>${item.author || 'Hazem'}</span>
                                 <span class="text-[10px] text-slate-400 mt-0.5"><i class="fa-regular fa-calendar ml-1 text-purple-400"></i>${formatDate(item.createdAt)}</span>
                             </div>
-                            <!-- زر الإعجاب الحقيقي المباشر -->
-                            <button onclick="likeMaterial('${item.id}')" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-pink-500/10 hover:bg-pink-500/20 text-pink-400 border border-pink-500/20 transition">
-                                <i class="fa-solid fa-heart text-xs"></i>
+                            
+                            <!-- زر الإعجاب المنضبط (مرة واحدة / إلغاء) -->
+                            <button onclick="toggleLike('${item.id}')" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg ${isLiked ? 'bg-pink-600 text-white shadow-md shadow-pink-500/30' : 'bg-pink-500/10 hover:bg-pink-500/20 text-pink-400 border border-pink-500/20'} transition duration-200">
+                                <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart text-xs"></i>
                                 <span class="font-bold text-xs">${item.likes || 0}</span>
                             </button>
                         </div>
@@ -544,20 +547,34 @@
             });
         };
 
-        // زيادة زر الإعجاب حياً في Firebase
-        window.likeMaterial = async function(id) {
-            try {
-                const docRef = doc(db, "materials", id);
-                await updateDoc(docRef, {
-                    likes: increment(1)
-                });
-                showToast("شغال! تم تسجيل إعجابك ❤️");
-            } catch (error) {
-                console.error("خطأ في تسجيل الإعجاب: ", error);
+        // دالة إضافة أو إلغاء الإعجاب بمعدل مرة واحدة لكل طالب
+        window.toggleLike = async function(id) {
+            let likedPosts = getLikedPosts();
+            const docRef = doc(db, "materials", id);
+
+            if (likedPosts.includes(id)) {
+                // إلغاء الإعجاب
+                likedPosts = likedPosts.filter(postId => postId !== id);
+                localStorage.setItem("stem_dk_liked_posts", JSON.stringify(likedPosts));
+                try {
+                    await updateDoc(docRef, { likes: increment(-1) });
+                    showToast("تم إلغاء الإعجاب");
+                } catch (error) {
+                    console.error(error);
+                }
+            } else {
+                // إضافة إعجاب
+                likedPosts.push(id);
+                localStorage.setItem("stem_dk_liked_posts", JSON.stringify(likedPosts));
+                try {
+                    await updateDoc(docRef, { likes: increment(1) });
+                    showToast("تم إضافة الإعجاب ❤️");
+                } catch (error) {
+                    console.error(error);
+                }
             }
         };
 
-        // إعادة ضبط جميع الفلاتر بنقرة واحدة
         window.resetFilters = function() {
             document.getElementById("searchInput").value = "";
             document.getElementById("gradeFilter").value = "ALL";
@@ -572,7 +589,6 @@
             showToast("تمت إعادة ضبط جميع الفلاتر بنجاح");
         };
 
-        // معالجة نموذج الرفع والإضافة السحابية
         window.handleFormSubmit = async function(event) {
             event.preventDefault();
             const savedUser = localStorage.getItem('user');
@@ -606,25 +622,22 @@
                 toggleModal(false);
                 showToast("تم رفع ونشر الماتريال بنجاح للجميع!");
             } catch (error) {
-                console.error("خطأ أثناء إضافة المستند: ", error);
+                console.error(error);
                 showToast("حدث خطأ أثناء الرفع، تأكد من الاتصال.");
             }
         };
 
-        // حذف الماتريال سحابياً
         window.deleteMaterial = async function(id) {
             if (confirm("هل أنت متأكد من إزالة هذه المادة من المنصة للجميع؟")) {
                 try {
                     await deleteDoc(doc(db, "materials", id));
                     showToast("تم حذف المادة بنجاح.");
                 } catch (error) {
-                    console.error("خطأ أثناء الحذف: ", error);
-                    showToast("فشل الحذف، حاول مرة أخرى.");
+                    console.error(error);
                 }
             }
         };
 
-        // المظهر والمفضلة
         window.initTheme = function() {
             const savedTheme = localStorage.getItem('theme');
             const html = document.documentElement;
