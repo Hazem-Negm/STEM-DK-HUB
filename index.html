@@ -286,9 +286,9 @@
         </div>
     </main>
 
-    <!-- Modal Form -->
+    <!-- Modal Form (مع دعم الطريقتين لرفع الملفات) -->
     <div id="uploadModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center hidden p-4" dir="rtl">
-        <div class="theme-card border rounded-2xl w-full max-w-lg p-6 relative neon-glow">
+        <div class="theme-card border rounded-2xl w-full max-w-lg p-6 relative neon-glow max-h-[90vh] overflow-y-auto">
             <button onclick="toggleModal(false)" class="absolute top-4 left-4 text-slate-400 hover:text-indigo-400 text-lg">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -352,17 +352,34 @@
                         </select>
                     </div>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold theme-text-sub mb-1">رابط الملف (Google Drive) *</label>
-                    <input type="url" id="linkInput" required placeholder="https://drive.google.com/..." class="w-full theme-input border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+
+                <!-- اختيار طريقة إرفاق الملف (جديد: Cloudinary أو رابط خارجي) -->
+                <div class="p-3 theme-card border rounded-xl space-y-3">
+                    <label class="block text-xs font-bold theme-text-sub">طريقة إرفاق الملف *</label>
+                    <select id="uploadMethodSelect" onchange="toggleUploadMethod()" class="w-full theme-input border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-500 font-semibold cursor-pointer">
+                        <option value="computer">رفع ملف مباشر من الكمبيوتر (Cloudinary)</option>
+                        <option value="link">إدخال رابط خارجي (Google Drive / موقع آخر)</option>
+                    </select>
+
+                    <!-- حقل اختيار الملف من الكمبيوتر -->
+                    <div id="computerUploadDiv">
+                        <input type="file" id="stemFileInput" class="w-full text-xs theme-text-sub file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer">
+                        <p class="text-[10px] text-slate-400 mt-1">يمكنك رفع ملفات PDF، صور، أو مستندات مباشرة.</p>
+                    </div>
+
+                    <!-- حقل إدخال الرابط الخارجي -->
+                    <div id="linkUploadDiv" class="hidden">
+                        <input type="url" id="linkInput" placeholder="https://drive.google.com/..." class="w-full theme-input border rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-indigo-500">
+                    </div>
                 </div>
+
                 <div>
                     <label class="block text-xs font-bold theme-text-sub mb-1">وصف مختصر</label>
                     <textarea id="descInput" rows="2" placeholder="تفاصيل بسيطة عن الماتريال..." class="w-full theme-input border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500"></textarea>
                 </div>
                 <div class="pt-2 flex justify-end gap-3">
                     <button type="button" onclick="toggleModal(false)" class="px-4 py-2 bg-slate-700/30 text-slate-300 text-xs font-bold rounded-xl transition">إلغاء</button>
-                    <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl transition">حفظ ونشر مباشر</button>
+                    <button type="submit" id="submitBtn" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl transition">حفظ ونشر مباشر</button>
                 </div>
             </form>
         </div>
@@ -526,7 +543,7 @@
                                 <span class="text-[10px] text-slate-400 mt-0.5"><i class="fa-regular fa-calendar ml-1 text-purple-400"></i>${formatDate(item.createdAt)}</span>
                             </div>
                             
-                            <!-- زر الإعجاب المنضبط (مرة واحدة / إلغاء) -->
+                            <!-- زر الإعجاب المنضبط -->
                             <button onclick="toggleLike('${item.id}')" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg ${isLiked ? 'bg-pink-600 text-white shadow-md shadow-pink-500/30' : 'bg-pink-500/10 hover:bg-pink-500/20 text-pink-400 border border-pink-500/20'} transition duration-200">
                                 <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart text-xs"></i>
                                 <span class="font-bold text-xs">${item.likes || 0}</span>
@@ -547,31 +564,123 @@
             });
         };
 
-        // دالة إضافة أو إلغاء الإعجاب بمعدل مرة واحدة لكل طالب
+        // دالة التبديل بين الرفع من الكمبيوتر أو إدخال رابط خارجي
+        window.toggleUploadMethod = function() {
+            const method = document.getElementById("uploadMethodSelect").value;
+            const computerDiv = document.getElementById("computerUploadDiv");
+            const linkDiv = document.getElementById("linkUploadDiv");
+            const linkInput = document.getElementById("linkInput");
+            const fileInput = document.getElementById("stemFileInput");
+
+            if (method === "computer") {
+                computerDiv.classList.remove("hidden");
+                linkDiv.classList.add("hidden");
+                linkInput.removeAttribute("required");
+            } else {
+                computerDiv.classList.add("hidden");
+                linkDiv.classList.remove("hidden");
+                linkInput.setAttribute("required", "true");
+                fileInput.value = "";
+            }
+        };
+
+        // دالة إرسال النشر مع معالجة الرفع عبر Cloudinary أو الرابط الخارجي
+        window.handleFormSubmit = async function(event) {
+            event.preventDefault();
+            const savedUser = localStorage.getItem('user');
+            
+            if (!savedUser) {
+                showToast("عفواً! يجب عليك تسجيل الدخول أولاً.");
+                toggleModal(false);
+                return;
+            }
+
+            const userData = JSON.parse(savedUser);
+            const authorName = userData.name || "Hazem DK S'29";
+            const method = document.getElementById("uploadMethodSelect").value;
+            
+            let finalFileLink = "";
+            const submitBtn = document.getElementById("submitBtn");
+            submitBtn.disabled = true;
+            submitBtn.innerText = "جاري النشر...";
+
+            try {
+                if (method === "computer") {
+                    const fileInput = document.getElementById("stemFileInput");
+                    if (!fileInput.files[0]) {
+                        showToast("الرجاء اختيار ملف من الكمبيوتر أولاً.");
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = "حفظ ونشر مباشر";
+                        return;
+                    }
+
+                    showToast("جاري رفع الملف للسحابة...");
+                    const file = fileInput.files[0];
+                    const formData = new FormData();
+                    formData.append("file", file);
+                    formData.append("upload_preset", "STEM DK Hub"); // اسم الـ Preset اللي عملناها
+
+                    const response = await fetch("https://api.cloudinary.com/v1_1/vv8bemj0/upload", {
+                        method: "POST",
+                        body: formData
+                    });
+                    const data = await response.json();
+
+                    if (data.secure_url) {
+                        finalFileLink = data.secure_url;
+                    } else {
+                        throw new Error("فشل الرفع لـ Cloudinary");
+                    }
+                } else {
+                    finalFileLink = document.getElementById("linkInput").value;
+                }
+
+                const newMaterial = {
+                    title: document.getElementById("titleInput").value,
+                    grade: document.getElementById("gradeInput").value,
+                    subject: document.getElementById("subjectInput").value,
+                    semester: document.getElementById("semesterInput").value,
+                    category: document.getElementById("categoryInput").value,
+                    link: finalFileLink,
+                    desc: document.getElementById("descInput").value,
+                    author: authorName,
+                    createdAt: serverTimestamp(),
+                    likes: 0,
+                    featured: false
+                };
+
+                await addDoc(materialsRef, newMaterial);
+                document.getElementById("materialForm").reset();
+                toggleUploadMethod();
+                toggleModal(false);
+                showToast("تم رفع ونشر الماتريال بنجاح للجميع!");
+            } catch (error) {
+                console.error(error);
+                showToast("حدث خطأ أثناء الرفع، تأكد من الاتصال أو حجم الملف.");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "حفظ ونشر مباشر";
+            }
+        };
+
         window.toggleLike = async function(id) {
             let likedPosts = getLikedPosts();
             const docRef = doc(db, "materials", id);
 
             if (likedPosts.includes(id)) {
-                // إلغاء الإعجاب
                 likedPosts = likedPosts.filter(postId => postId !== id);
                 localStorage.setItem("stem_dk_liked_posts", JSON.stringify(likedPosts));
                 try {
                     await updateDoc(docRef, { likes: increment(-1) });
                     showToast("تم إلغاء الإعجاب");
-                } catch (error) {
-                    console.error(error);
-                }
+                } catch (error) { console.error(error); }
             } else {
-                // إضافة إعجاب
                 likedPosts.push(id);
                 localStorage.setItem("stem_dk_liked_posts", JSON.stringify(likedPosts));
                 try {
                     await updateDoc(docRef, { likes: increment(1) });
                     showToast("تم إضافة الإعجاب ❤️");
-                } catch (error) {
-                    console.error(error);
-                }
+                } catch (error) { console.error(error); }
             }
         };
 
@@ -589,52 +698,12 @@
             showToast("تمت إعادة ضبط جميع الفلاتر بنجاح");
         };
 
-        window.handleFormSubmit = async function(event) {
-            event.preventDefault();
-            const savedUser = localStorage.getItem('user');
-            
-            if (!savedUser) {
-                showToast("عفواً! يجب عليك تسجيل الدخول أولاً.");
-                toggleModal(false);
-                return;
-            }
-
-            const userData = JSON.parse(savedUser);
-            const authorName = userData.name || "Hazem DK S'29";
-
-            const newMaterial = {
-                title: document.getElementById("titleInput").value,
-                grade: document.getElementById("gradeInput").value,
-                subject: document.getElementById("subjectInput").value,
-                semester: document.getElementById("semesterInput").value,
-                category: document.getElementById("categoryInput").value,
-                link: document.getElementById("linkInput").value,
-                desc: document.getElementById("descInput").value,
-                author: authorName,
-                createdAt: serverTimestamp(),
-                likes: 0,
-                featured: false
-            };
-
-            try {
-                await addDoc(materialsRef, newMaterial);
-                document.getElementById("materialForm").reset();
-                toggleModal(false);
-                showToast("تم رفع ونشر الماتريال بنجاح للجميع!");
-            } catch (error) {
-                console.error(error);
-                showToast("حدث خطأ أثناء الرفع، تأكد من الاتصال.");
-            }
-        };
-
         window.deleteMaterial = async function(id) {
             if (confirm("هل أنت متأكد من إزالة هذه المادة من المنصة للجميع؟")) {
                 try {
                     await deleteDoc(doc(db, "materials", id));
                     showToast("تم حذف المادة بنجاح.");
-                } catch (error) {
-                    console.error(error);
-                }
+                } catch (error) { console.error(error); }
             }
         };
 
