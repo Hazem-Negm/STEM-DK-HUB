@@ -353,7 +353,7 @@
                     </div>
                 </div>
 
-                <!-- اختيار طريقة إرفاق الملف (جديد: Cloudinary أو رابط خارجي) -->
+                <!-- اختيار طريقة إرفاق الملف (Cloudinary أو رابط خارجي) -->
                 <div class="p-3 theme-card border rounded-xl space-y-3">
                     <label class="block text-xs font-bold theme-text-sub">طريقة إرفاق الملف *</label>
                     <select id="uploadMethodSelect" onchange="toggleUploadMethod()" class="w-full theme-input border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-500 font-semibold cursor-pointer">
@@ -431,7 +431,6 @@
         let isFirstLoad = true;
         let showOnlyBookmarks = false;
 
-        // إدارة الإعجابات المحفوظة محلياً (لكل مستخدم مرة واحدة)
         function getLikedPosts() {
             const saved = localStorage.getItem("stem_dk_liked_posts");
             return saved ? JSON.parse(saved) : [];
@@ -543,7 +542,6 @@
                                 <span class="text-[10px] text-slate-400 mt-0.5"><i class="fa-regular fa-calendar ml-1 text-purple-400"></i>${formatDate(item.createdAt)}</span>
                             </div>
                             
-                            <!-- زر الإعجاب المنضبط -->
                             <button onclick="toggleLike('${item.id}')" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg ${isLiked ? 'bg-pink-600 text-white shadow-md shadow-pink-500/30' : 'bg-pink-500/10 hover:bg-pink-500/20 text-pink-400 border border-pink-500/20'} transition duration-200">
                                 <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart text-xs"></i>
                                 <span class="font-bold text-xs">${item.likes || 0}</span>
@@ -564,7 +562,6 @@
             });
         };
 
-        // دالة التبديل بين الرفع من الكمبيوتر أو إدخال رابط خارجي
         window.toggleUploadMethod = function() {
             const method = document.getElementById("uploadMethodSelect").value;
             const computerDiv = document.getElementById("computerUploadDiv");
@@ -584,7 +581,7 @@
             }
         };
 
-        // دالة إرسال النشر مع معالجة الرفع عبر Cloudinary أو الرابط الخارجي
+        // دالة الإرسال مع استخدام auto/upload لدعم ملفات الـ PDF والملفات الأخرى بدون أخطاء ACL
         window.handleFormSubmit = async function(event) {
             event.preventDefault();
             const savedUser = localStorage.getItem('user');
@@ -618,9 +615,10 @@
                     const file = fileInput.files[0];
                     const formData = new FormData();
                     formData.append("file", file);
-                    formData.append("upload_preset", "STEM DK Hub"); // اسم الـ Preset اللي عملناها
+                    formData.append("upload_preset", "STEM DK Hub");
 
-                    const response = await fetch("https://api.cloudinary.com/v1_1/vv8bemj0/upload", {
+                    // استخدام auto/upload لضمان قبول جميع أنواع الملفات (PDF، صور، مستندات)
+                    const response = await fetch("https://api.cloudinary.com/v1_1/vv8bemj0/auto/upload", {
                         method: "POST",
                         body: formData
                     });
@@ -629,7 +627,8 @@
                     if (data.secure_url) {
                         finalFileLink = data.secure_url;
                     } else {
-                        throw new Error("فشل الرفع لـ Cloudinary");
+                        console.error("Cloudinary Error:", data);
+                        throw new Error(data.error?.message || "فشل الرفع لـ Cloudinary");
                     }
                 } else {
                     finalFileLink = document.getElementById("linkInput").value;
@@ -656,7 +655,7 @@
                 showToast("تم رفع ونشر الماتريال بنجاح للجميع!");
             } catch (error) {
                 console.error(error);
-                showToast("حدث خطأ أثناء الرفع، تأكد من الاتصال أو حجم الملف.");
+                showToast("حدث خطأ أثناء الرفع، تأكد من إعدادات الـ Unsigned Preset والاتصال.");
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerText = "حفظ ونشر مباشر";
