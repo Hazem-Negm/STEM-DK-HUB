@@ -581,7 +581,7 @@
             }
         };
 
-        // دالة الإرسال مع استخدام auto/upload لدعم ملفات الـ PDF والملفات الأخرى بدون أخطاء ACL
+        // دالة الإرسال مع تحديث اسم الـ Preset إلى STEM_DK_HUB واستخدام auto/upload
         window.handleFormSubmit = async function(event) {
             event.preventDefault();
             const savedUser = localStorage.getItem('user');
@@ -615,9 +615,8 @@
                     const file = fileInput.files[0];
                     const formData = new FormData();
                     formData.append("file", file);
-                    formData.append("upload_preset", "STEM DK Hub");
+                    formData.append("upload_preset", "STEM_DK_HUB");
 
-                    // استخدام auto/upload لضمان قبول جميع أنواع الملفات (PDF، صور، مستندات)
                     const response = await fetch("https://api.cloudinary.com/v1_1/vv8bemj0/auto/upload", {
                         method: "POST",
                         body: formData
