@@ -182,7 +182,7 @@
                     <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">لطلاب مدرسة المتفوقين بالدقهلية</span>
                 </h2>
                 <p class="theme-text-sub text-sm sm:text-base mt-4 leading-relaxed font-medium">
-                    تصفح، حمل، وشارك الملازم والـ LOs والامتحانات السابقة بسهولة وفي الوقت الحقيقي.
+                    تصفح، حمل، وشارك الملازم والـ LOs والامتحانات السابقة والمراجعات بسهولة وفي الوقت الحقيقي.
                 </p>
                 
                 <!-- عداد الإحصائيات -->
@@ -252,8 +252,9 @@
                 <select id="categoryFilter" onchange="renderMaterials()" class="w-full theme-input border text-sm font-semibold rounded-xl px-4 py-3.5 focus:outline-none focus:border-indigo-500 transition cursor-pointer">
                     <option value="ALL">كل الأقسام</option>
                     <option value="LO">LO Guides</option>
+                    <option value="Revision">مراجعات (Revision)</option>
+                    <option value="Exams">امتحانات سابقة (Exams)</option>
                     <option value="Capstone">Capstone</option>
-                    <option value="Exams">امتحانات سابقة</option>
                 </select>
             </div>
         </div>
@@ -286,7 +287,7 @@
         </div>
     </main>
 
-    <!-- Modal Form (مع دعم الطريقتين لرفع الملفات) -->
+    <!-- Modal Form -->
     <div id="uploadModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center hidden p-4" dir="rtl">
         <div class="theme-card border rounded-2xl w-full max-w-lg p-6 relative neon-glow max-h-[90vh] overflow-y-auto">
             <button onclick="toggleModal(false)" class="absolute top-4 left-4 text-slate-400 hover:text-indigo-400 text-lg">
@@ -347,8 +348,9 @@
                         <label class="block text-xs font-bold theme-text-sub mb-1">القسم *</label>
                         <select id="categoryInput" required class="w-full theme-input border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
                             <option value="LO">LO Guide</option>
+                            <option value="Revision">مراجعات (Revision)</option>
+                            <option value="Exams">امتحانات سابقة (Exams)</option>
                             <option value="Capstone">Capstone</option>
-                            <option value="Exams">امتحانات سابقة</option>
                         </select>
                     </div>
                 </div>
@@ -514,6 +516,18 @@
                 const canDelete = currentUser && (currentUser === item.author || currentUser === "Hazem DK S'29");
                 const isBookmarked = bookmarks.includes(item.id);
                 const isLiked = likedPosts.includes(item.id);
+
+                // ألوان مميزة لكل تصنيف (Category Tag)
+                let categoryBadge = '';
+                if (item.category === 'Exams') {
+                    categoryBadge = '<span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">امتحانات</span>';
+                } else if (item.category === 'Revision') {
+                    categoryBadge = '<span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">مراجعة</span>';
+                } else if (item.category === 'Capstone') {
+                    categoryBadge = '<span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20">Capstone</span>';
+                } else {
+                    categoryBadge = '<span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">LO Guide</span>';
+                }
                 
                 const card = document.createElement("div");
                 card.className = "gradient-border rounded-2xl p-5 flex flex-col justify-between hover:neon-glow transition duration-300 theme-card relative group";
@@ -524,6 +538,7 @@
                                 ${item.featured ? '<span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20"><i class="fa-solid fa-fire text-[10px] ml-1"></i>مميز</span>' : ''}
                                 <span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">${item.grade || 'Grade'}</span>
                                 <span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">${item.subject || 'General'}</span>
+                                ${categoryBadge}
                             </div>
                             <div class="flex items-center gap-2">
                                 <button onclick="toggleBookmark('${item.id}')" class="text-xs ${isBookmarked ? 'text-amber-400' : 'text-slate-500 hover:text-amber-400'} transition p-1" title="حفظ في المفضلة">
