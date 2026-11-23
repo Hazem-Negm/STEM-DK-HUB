@@ -161,7 +161,7 @@
   <span class="pulse-dot"></span>
   <span>المنصة الرسمية لمشاركة ملخصات وماتريال STEM الدقهلية | إعداد Hazem DK S'29</span>
   <span class="separator">•</span>
-  <span class="supporter-badge">Supported by <strong>Mahmoud Mostafa</strong></span>
+  <span class="supporter-badge">Supported by <strong>Mahmoud Mostafa Dk S'29</strong></span>
   <span class="separator">•</span>
    <span class="supporter-badge">Created by <strong>Hazem DK S'29</strong></span>
 </div>
@@ -251,7 +251,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 mb-8" dir="rtl">
             <div class="relative lg:col-span-2">
                 <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" id="searchInput" oninput="renderMaterials()" placeholder="ابحث باسم الماتريال أو الوصف..." class="w-full theme-input border rounded-xl pr-11 pl-4 py-3.5 text-sm placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition">
+                <input type="text" id="searchInput" oninput="debouncedSearch()" placeholder="ابحث باسم الماتريال أو الوصف..." class="w-full theme-input border rounded-xl pr-11 pl-4 py-3.5 text-sm placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition">
             </div>
 
             <div>
@@ -326,6 +326,14 @@
 
         <!-- Cards Grid -->
         <div id="materialsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" dir="rtl"></div>
+
+        <!-- Load More Button -->
+        <div id="loadMoreContainer" class="text-center mt-8 hidden" dir="rtl">
+            <button onclick="loadMoreMaterials()" class="px-6 py-3 rounded-xl bg-indigo-600/20 hover:bg-indigo-600 text-indigo-400 hover:text-white border border-indigo-500/30 text-xs font-bold transition duration-300 inline-flex items-center gap-2">
+                <i class="fa-solid fa-angles-down"></i>
+                <span>عرض المزيد من الماتريال (<span id="remainingCount">0</span> متبقي)</span>
+            </button>
+        </div>
 
         <!-- Empty State -->
         <div id="emptyState" class="hidden text-center py-16 theme-card rounded-2xl border" dir="rtl">
@@ -481,6 +489,35 @@
         let isFirstLoad = true;
         let showOnlyBookmarks = false;
 
+        // إعدادات التسريع (الدفعات والكاش والبحث المؤجل)
+        const ITEMS_PER_PAGE = 24;
+        let currentLimit = ITEMS_PER_PAGE;
+        let searchTimeout = null;
+        const CACHE_KEY = "stem_dk_materials_cache";
+
+        // تحميل البيانات من الكاش فوراً لسرعة الفتح
+        try {
+            const cachedData = localStorage.getItem(CACHE_KEY);
+            if (cachedData) {
+                liveMaterials = JSON.parse(cachedData);
+                setTimeout(() => renderMaterials(true), 20);
+            }
+        } catch (e) { console.warn("Cache read error"); }
+
+        // دالة تأخير البحث (Debounce) لمنع التهنيج أثناء الكتابة
+        window.debouncedSearch = function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                renderMaterials(true);
+            }, 300);
+        };
+
+        // دالة زر عرض المزيد
+        window.loadMoreMaterials = function() {
+            currentLimit += ITEMS_PER_PAGE;
+            renderMaterials(false);
+        };
+
         function getLikedPosts() {
             const saved = localStorage.getItem("stem_dk_liked_posts");
             return saved ? JSON.parse(saved) : [];
@@ -489,16 +526,23 @@
         const q = query(materialsRef, orderBy("createdAt", "desc"));
         onSnapshot(q, (snapshot) => {
             const previousCount = liveMaterials.length;
-            liveMaterials = [];
+            const freshMaterials = [];
             let totalLikes = 0;
             
             snapshot.forEach((docSnap) => {
                 const data = docSnap.data();
-                liveMaterials.push({ id: docSnap.id, ...data });
+                freshMaterials.push({ id: docSnap.id, ...data });
                 totalLikes += (data.likes || 0);
             });
 
-            if (!isFirstLoad && liveMaterials.length > previousCount) {
+            liveMaterials = freshMaterials;
+
+            // تحديث الكاش في المتصفح
+            try {
+                localStorage.setItem(CACHE_KEY, JSON.stringify(liveMaterials));
+            } catch (e) { console.warn("Storage full, skipping cache"); }
+
+            if (!isFirstLoad && liveMaterials.length > previousCount && previousCount > 0) {
                 const newestItem = liveMaterials[0];
                 showToast(`🚀 تم نشر مادة جديدة: ${newestItem.title || 'مادة جديدة'}`);
             }
@@ -507,7 +551,7 @@
             const likesElem = document.getElementById("totalLikesCount");
             if(likesElem) likesElem.innerText = totalLikes;
 
-            renderMaterials();
+            renderMaterials(true);
         }, (error) => {
             console.error("خطأ فايربيس: ", error);
         });
@@ -518,7 +562,11 @@
             return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
         }
 
-        window.renderMaterials = function() {
+        window.renderMaterials = function(resetLimit = true) {
+            if (resetLimit) {
+                currentLimit = ITEMS_PER_PAGE;
+            }
+
             const bookmarks = getBookmarks();
             const likedPosts = getLikedPosts();
             const search = document.getElementById("searchInput").value.toLowerCase();
@@ -531,9 +579,10 @@
             const grid = document.getElementById("materialsGrid");
             const emptyState = document.getElementById("emptyState");
             const countElem = document.getElementById("materialsCount");
+            const loadMoreContainer = document.getElementById("loadMoreContainer");
+            const remainingCountElem = document.getElementById("remainingCount");
 
             if(countElem) countElem.innerText = liveMaterials.length;
-            grid.innerHTML = "";
 
             const currentUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).name : null;
 
@@ -554,18 +603,35 @@
             }
 
             if (filtered.length === 0) {
+                grid.innerHTML = "";
                 emptyState.classList.remove("hidden");
+                if (loadMoreContainer) loadMoreContainer.classList.add("hidden");
                 return;
             } else {
                 emptyState.classList.add("hidden");
             }
 
-            filtered.forEach(item => {
+            // اقتطاع العدد المعروض فقط لتخفيف الحمل على المتصفح
+            const itemsToRender = filtered.slice(0, currentLimit);
+            const remaining = filtered.length - itemsToRender.length;
+
+            if (loadMoreContainer && remainingCountElem) {
+                if (remaining > 0) {
+                    remainingCountElem.innerText = remaining;
+                    loadMoreContainer.classList.remove("hidden");
+                } else {
+                    loadMoreContainer.classList.add("hidden");
+                }
+            }
+
+            // استخدام DocumentFragment لبناء البطاقات في الذاكرة دفعة واحدة
+            const fragment = document.createDocumentFragment();
+
+            itemsToRender.forEach(item => {
                 const canDelete = currentUser && (currentUser === item.author || currentUser === "Hazem DK S'29");
                 const isBookmarked = bookmarks.includes(item.id);
                 const isLiked = likedPosts.includes(item.id);
 
-                // ألوان مميزة لكل تصنيف (Category Tag)
                 let categoryBadge = '';
                 if (item.category === 'Exams') {
                     categoryBadge = '<span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">امتحانات</span>';
@@ -621,8 +687,11 @@
                         </div>
                     </div>
                 `;
-                grid.appendChild(card);
+                fragment.appendChild(card);
             });
+
+            grid.innerHTML = "";
+            grid.appendChild(fragment);
         };
 
         window.toggleUploadMethod = function() {
