@@ -36,6 +36,51 @@
     <!-- Google Fonts (Cairo) -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        .top-announcement-bar {
+  width: 100%;
+  background: linear-gradient(90deg, #5b21b6 0%, #7c3aed 50%, #6d28d9 100%);
+  color: #ffffff;
+  text-align: center;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  z-index: 1000;
+}
+
+.top-announcement-bar .pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #34d399;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 8px #34d399;
+}
+
+.top-announcement-bar .separator {
+  opacity: 0.6;
+  margin: 0 4px;
+}
+
+.top-announcement-bar .supporter-badge {
+  background-color: rgba(0, 0, 0, 0.25);
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  letter-spacing: 0.3px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.top-announcement-bar .supporter-badge strong {
+  color: #fde047; /* لون ذهبي خفيف لإبراز الاسم */
+  font-weight: 700;
+}
         body {
             font-family: 'Cairo', sans-serif;
             transition: background-color 0.3s, color 0.3s;
@@ -111,13 +156,16 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
-
+<!-- الشريط العلوي -->
+<div class="top-announcement-bar">
+  <span class="pulse-dot"></span>
+  <span>المنصة الرسمية لمشاركة ملخصات وماتريال STEM الدقهلية | إعداد Hazem DK S'29</span>
+  <span class="separator">•</span>
+  <span class="supporter-badge">Supported by <strong>Mahmoud Mostafa</strong></span>
+  <span class="separator">•</span>
+   <span class="supporter-badge">Created by <strong>Hazem DK S'29</strong></span>
+</div>
     <!-- Top Announcement Bar -->
-    <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white text-xs font-bold py-2 text-center tracking-wide flex items-center justify-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>🚀 المنصة الرسمية لمشاركة ملخصات وماتريال STEM الدقهلية | إعداد Hazem DK S'29</span>
-    </div>
-
     <!-- Header Section -->
     <header class="sticky top-0 z-50 theme-header backdrop-blur-xl border-b transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
