@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STEM DK Material Hub | منصة المواد العلمية الشاملة</title>
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+    <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js">
+    <link rel="modulepreload" href="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js">
+    <!-- كود التوثيق الخاص بك -->
+    <meta name="google-site-verification" content="V2vLylp8_FxIdICy_EEwdqtk9FP50zRgrLyC7RVAN_0" />
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#05070a',
+                            card: '#0d1117',
+                            border: '#161b22',
+                            accent: '#6366f1',
+                            purple: '#a855f7',
+                            cyan: '#06b6d4'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Cairo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        .top-announcement-bar {
+  width: 100%;
+  background: linear-gradient(90deg, #5b21b6 0%, #7c3aed 50%, #6d28d9 100%);
+  color: #ffffff;
+  text-align: center;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  z-index: 1000;
+}
+
+.top-announcement-bar .pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #34d399;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 8px #34d399;
+}
+
+.top-announcement-bar .separator {
+  opacity: 0.6;
+  margin: 0 4px;
+}
+
+.top-announcement-bar .supporter-badge {
+  background-color: rgba(0, 0, 0, 0.25);
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  letter-spacing: 0.3px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.top-announcement-bar .supporter-badge strong {
+  color: #fde047; /* لون ذهبي خفيف لإبراز الاسم */
+  font-weight: 700;
+}
+        body {
+            font-family: 'Cairo', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Dark Mode Setup (Default) */
+        html.dark body {
+            background-color: #05070a;
+            color: #e6edf3;
+        }
+        html.dark .theme-card {
+            background-color: #0d1117 !important;
+            border-color: #161b22 !important;
+        }
+        html.dark .theme-header {
+            background-color: rgba(5, 7, 10, 0.8) !important;
+            border-color: #161b22 !important;
+        }
+        html.dark .theme-text-main {
+            color: #ffffff !important;
+        }
+        html.dark .theme-text-sub {
+            color: #94a3b8 !important;
+        }
+        html.dark .theme-input {
+            background-color: #0d1117 !important;
+            border-color: #161b22 !important;
+            color: #e6edf3 !important;
+        }
+
+        /* Light Mode Setup */
+        html:not(.dark) body {
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        html:not(.dark) .theme-card {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+        html:not(.dark) .theme-header {
+            background-color: rgba(255, 255, 255, 0.85) !important;
+            border-color: #e2e8f0 !important;
+        }
+        html:not(.dark) .theme-text-main {
+            color: #0f172a !important;
+        }
+        html:not(.dark) .theme-text-sub {
+            color: #475569 !important;
+        }
+        html:not(.dark) .theme-input {
+            background-color: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+        }
+
+        .gradient-border {
+            border: 1px solid transparent;
+            background: linear-gradient(#0d1117, #0d1117) padding-box,
+                        linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(168, 85, 247, 0.1)) border-box;
+        }
+        html:not(.dark) .gradient-border {
+            background: linear-gradient(#ffffff, #ffffff) padding-box,
+                        linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(168, 85, 247, 0.2)) border-box;
+        }
+        .neon-glow {
+            box-shadow: 0 0 20px -3px rgba(99, 102, 241, 0.25);
+        }
+        .hero-pattern {
+            background-image: radial-gradient(rgba(99, 102, 241, 0.15) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+<!-- الشريط العلوي -->
+<div class="top-announcement-bar">
+  <span class="pulse-dot"></span>
+  <span>المنصة الرسمية لمشاركة ملخصات وماتريال STEM الدقهلية | إعداد Hazem DK S'29</span>
+  <span class="separator">•</span>
+  <span class="supporter-badge">Supported by <strong>Mahmoud Mostafa</strong></span>
+  <span class="separator">•</span>
+   <span class="supporter-badge">Created by <strong>Hazem DK S'29</strong></span>
+</div>
+    <!-- Top Announcement Bar -->
+    <!-- Header Section -->
+    <header class="sticky top-0 z-50 theme-header backdrop-blur-xl border-b transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="relative group">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-2xl blur opacity-50 group-hover:opacity-100 transition duration-300"></div>
+                    <img src="https://lh3.googleusercontent.com/d/1-IrpNMt6vkEL-Gq8qkYCpvSeqRtKUq-e=w1000" alt="STEM DK Hub Logo" class="relative w-12 h-12 object-contain rounded-2xl theme-card p-1.5 border">
+                </div>
+                <div class="flex flex-col items-start" dir="ltr">
+                    <h1 class="text-xl font-black theme-text-main tracking-wide">
+                        STEM <span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">DK HUB</span>
+                    </h1>
+                    <p class="text-[11px] text-indigo-400 font-semibold tracking-wider">Created by Hazem DK S'29</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <!-- زر مفضلاتي -->
+                <button onclick="toggleBookmarksView()" id="bookmarkFilterBtn" title="المفضلة المحفوظة" class="p-2.5 rounded-xl theme-card border text-slate-300 hover:text-indigo-400 transition relative">
+                    <i class="fa-solid fa-bookmark text-amber-400"></i>
+                    <span id="bookmarkBadge" class="absolute -top-1 -right-1 bg-amber-500 text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
+                </button>
+
+                <!-- زر التبديل بين الوضع المظلم والواضح -->
+                <button onclick="toggleTheme()" id="themeToggleBtn" title="تغيير المظهر" class="p-2.5 rounded-xl theme-card border text-slate-300 hover:text-indigo-400 transition">
+                    <i class="fa-solid fa-moon text-indigo-400" id="themeIcon"></i>
+                </button>
+
+                <!-- مكان حساب المستخدم أو زر تسجيل الدخول -->
+                <div id="authContainer" class="flex items-center gap-3">
+                    <button onclick="loginWithGoogle()" class="flex items-center gap-2 bg-white hover:bg-gray-100 text-gray-800 text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-md">
+                        <i class="fa-brands fa-google text-red-500"></i>
+                        <span>تسجيل الدخول</span>
+                    </button>
+                </div>
+
+                <!-- زر إضافة مادة جديدة -->
+                <button onclick="toggleModal(true)" class="relative group overflow-hidden rounded-xl p-px font-bold text-xs">
+                    <span class="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600"></span>
+                    <span class="relative block px-5 py-2.5 rounded-[11px] theme-card transition duration-300 group-hover:bg-transparent theme-text-main group-hover:text-white flex items-center gap-2">
+                        <i class="fa-solid fa-plus text-indigo-400 transition"></i>
+                        <span>إضافة مادة جديدة</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow w-full">
+        
+        <!-- Hero Section -->
+        <div class="relative overflow-hidden rounded-3xl theme-card border p-8 sm:p-12 mb-10 hero-pattern" dir="rtl">
+            <div class="absolute top-0 left-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="max-w-3xl relative z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold mb-4">
+                    <span class="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
+                    تحديثات المناهج الدراسية (مزامنة حية)
+                </div>
+                <h2 class="text-3xl sm:text-5xl font-black theme-text-main leading-tight tracking-tight">
+                    مكتبة الماتريال الشاملة <br>
+                    <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">لطلاب مدرسة المتفوقين بالدقهلية</span>
+                </h2>
+                <p class="theme-text-sub text-sm sm:text-base mt-4 leading-relaxed font-medium">
+                    تصفح، حمل، وشارك الملازم والـ LOs والامتحانات السابقة والمراجعات بسهولة وفي الوقت الحقيقي.
+                </p>
+                
+                <!-- عداد الإحصائيات -->
+                <div class="mt-6 flex flex-wrap gap-4 text-xs theme-text-sub">
+                    <div class="inline-flex items-center gap-2 bg-indigo-500/5 px-4 py-2 rounded-xl border border-indigo-500/20">
+                        <i class="fa-solid fa-folder-open text-indigo-400"></i>
+                        <span>إجمالي الماتريال: <strong id="materialsCount" class="text-indigo-400 font-bold">0</strong> ملفات</span>
+                    </div>
+                    <div class="inline-flex items-center gap-2 bg-purple-500/5 px-4 py-2 rounded-xl border border-purple-500/20">
+                        <i class="fa-solid fa-heart text-pink-500"></i>
+                        <span>إجمالي التفاعلات: <strong id="totalLikesCount" class="text-purple-400 font-bold">0</strong> إعجاب</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls & Filters -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 mb-8" dir="rtl">
+            <div class="relative lg:col-span-2">
+                <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" id="searchInput" oninput="debouncedSearch()" placeholder="ابحث باسم الماتريال أو الوصف..." class="w-full theme-input border rounded-xl pr-11 pl-4 py-3.5 text-sm placeholder-slate-400 focus:outline-none focus:border-indigo-500 transition">
+            </div>
+
+            <div>
+                <select id="gradeFilter" onchange="applyFilters()" class="w-full theme-input border text-sm font-semibold rounded-xl px-4 py-3.5 focus:outline-none focus:border-indigo-500 transition cursor-pointer">
+                    <option value="ALL">جميع الصفوف</option>
+                    <option value="Grade 10">Grade 10</option>
+                    <option value="Grade 11">Grade 11</option>
+                    <option value="Grade 12">Grade 12</option>
+                </select>
+            </div>
+
+            <div>
+                <select id="semesterFilter" onchange="applyFilters()" class="w-full theme-input border text-sm font-semibold rounded-xl px-4 py-3.5 focus:outline-none focus:border-indigo-500 transition cursor-pointer">
+                    <option value="ALL">جميع الترمات</option>
+                    <option value="Semester 1">الترم الأول</option>
+                    <option value="Semester 2">الترم الثاني</option>
+                </select>
+            </div>
+
+            <div>
+                <select id="subjectFilter" onchange="applyFilters()" class="w-full theme-input border text-sm font-semibold rounded-xl px-4 py-3.5 focus:outline-none focus:border-indigo-500 transition cursor-pointer">
+                    <option value="ALL">جميع المواد</option>
+                    <optgroup label="المواد العلمية والتكنولوجية">
+                        <option value="Physics">Physics</option>
+                        <option value="Chemistry">Chemistry</option>
+                        <option value="Biology">Biology</option>
+                        <option value="Pure Math">Pure Math</option>
+                        <option value="Mechanics">Mechanics</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Capstone">Capstone / FABLAB</option>
+                    </optgroup>
+                    <optgroup label="اللغات والمواد الأدبية">
+                        <option value="Arabic">اللغة العربية (Arabic)</option>
+                        <option value="English">English</option>
+                        <option value="French">اللغة الفرنسية (French)</option>
+                        <option value="German">اللغة الألمانية (German)</option>
+                        <option value="Italian">اللغة الإيطالية (Italian)</option>
+                        <option value="Spanish">اللغة الإسبانية (Spanish)</option>
+                        <option value="Social Studies">دراسات اجتماعية (Social Studies)</option>
+                        <option value="Humanities">Humanities</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div>
+                <select id="categoryFilter" onchange="applyFilters()" class="w-full theme-input border text-sm font-semibold rounded-xl px-4 py-3.5 focus:outline-none focus:border-indigo-500 transition cursor-pointer">
+                    <option value="ALL">كل الأقسام</option>
+                    <option value="LO">LO Guides</option>
+                    <option value="Revision">مراجعات (Revision)</option>
+                    <option value="Exams">امتحانات سابقة (Exams)</option>
+                    <option value="Capstone">Capstone</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Sorting & Quick Action Bar -->
+        <div class="flex items-center justify-between mb-6 pb-2 border-b border-slate-800/50 text-xs" dir="rtl">
+            <div class="flex items-center gap-2 theme-text-sub font-semibold">
+                <i class="fa-solid fa-sort text-indigo-400"></i>
+                <span>ترتيب حسب:</span>
+                <select id="sortByInput" onchange="applyFilters()" class="bg-transparent theme-text-main font-bold focus:outline-none cursor-pointer">
+                    <option value="NEWEST">الأحدث إضافة</option>
+                    <option value="OLDEST">الأقدم إضافة</option>
+                    <option value="LIKES">الأكثر تفاعلاً ❤️</option>
+                </select>
+            </div>
+            <button onclick="resetFilters()" class="text-indigo-400 hover:text-indigo-300 font-bold transition flex items-center gap-1">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span>إعادة ضبط الفلاتر</span>
+            </button>
+        </div>
+
+        <!-- Cards Grid -->
+        <div id="materialsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" dir="rtl"></div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden text-center py-16 theme-card rounded-2xl border" dir="rtl">
+            <i class="fa-solid fa-box-open text-5xl text-slate-500 mb-3"></i>
+            <h3 class="text-lg font-bold theme-text-main">لم يتم العثور على أي نتائج</h3>
+            <p class="text-xs theme-text-sub mt-1">جرب كلمات بحث مختلفة أو قم بإزالة الفلاتر</p>
+        </div>
+
+        <!-- Load More -->
+        <div id="loadMoreWrap" class="hidden text-center mt-8" dir="rtl">
+            <button id="loadMoreBtn" onclick="loadMoreMaterials()" class="inline-flex items-center gap-2 text-sm text-indigo-400 font-bold hover:text-white bg-indigo-500/10 hover:bg-indigo-600 border border-indigo-500/20 px-6 py-3 rounded-xl transition">
+                <i id="loadMoreIcon" class="fa-solid fa-chevron-down text-xs"></i>
+                <span id="loadMoreText">عرض المزيد</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- Modal Form -->
+    <div id="uploadModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center hidden p-4" dir="rtl">
+        <div class="theme-card border rounded-2xl w-full max-w-lg p-6 relative neon-glow max-h-[90vh] overflow-y-auto">
+            <button onclick="toggleModal(false)" class="absolute top-4 left-4 text-slate-400 hover:text-indigo-400 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-lg font-bold theme-text-main mb-5 flex items-center gap-2">
+                <i class="fa-solid fa-file-circle-plus text-indigo-400"></i>
+                <span>رفع ماتريال جديدة (نشر مباشر)</span>
+            </h3>
+            <form id="materialForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold theme-text-sub mb-1">اسم الماتريال *</label>
+                    <input type="text" id="titleInput" required placeholder="مثال: Physics Ch 1 LO Summary" class="w-full theme-input border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold theme-text-sub mb-1">الصف الدراسي *</label>
+                        <select id="gradeInput" required class="w-full theme-input border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                            <option value="Grade 10">Grade 10</option>
+                            <option value="Grade 11">Grade 11</option>
+                            <option value="Grade 12">Grade 12</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold theme-text-sub mb-1">المادة *</label>
+                        <select id="subjectInput" required class="w-full theme-input border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                            <optgroup label="المواد العلمية والتكنولوجية">
+                                <option value="Physics">Physics</option>
+                                <option value="Chemistry">Chemistry</option>
+                                <option value="Biology">Biology</option>
+                                <option value="Pure Math">Pure Math</option>
+                                <option value="Mechanics">Mechanics</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Capstone">Capstone / FABLAB</option>
+                            </optgroup>
+                            <optgroup label="اللغات والمواد الأدبية">
+                                <option value="Arabic">اللغة العربية (Arabic)</option>
+                                <option value="English">English</option>
+                                <option value="French">اللغة الفرنسية (French)</option>
+                                <option value="German">اللغة الألمانية (German)</option>
+                                <option value="Italian">اللغة الإيطالية (Italian)</option>
+                                <option value="Spanish">اللغة الإسبانية (Spanish)</option>
+                                <option value="Social Studies">دراسات اجتماعية (Social Studies)</option>
+                                <option value="Humanities">Humanities</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold theme-text-sub mb-1">الفصل الدراسي *</label>
+                        <select id="semesterInput" required class="w-full theme-input border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                            <option value="Semester 1">Semester 1</option>
+                            <option value="Semester 2">Semester 2</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold theme-text-sub mb-1">القسم *</label>
+                        <select id="categoryInput" required class="w-full theme-input border rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                            <option value="LO">LO Guide</option>
+                            <option value="Revision">مراجعات (Revision)</option>
+                            <option value="Exams">امتحانات سابقة (Exams)</option>
+                            <option value="Capstone">Capstone</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- اختيار طريقة إرفاق الملف (Cloudinary أو رابط خارجي) -->
+                <div class="p-3 theme-card border rounded-xl space-y-3">
+                    <label class="block text-xs font-bold theme-text-sub">طريقة إرفاق الملف *</label>
+                    <select id="uploadMethodSelect" onchange="toggleUploadMethod()" class="w-full theme-input border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-500 font-semibold cursor-pointer">
+                        <option value="computer">رفع ملف مباشر من الكمبيوتر (Cloudinary)</option>
+                        <option value="link">إدخال رابط خارجي (Google Drive / موقع آخر)</option>
+                    </select>
+
+                    <!-- حقل اختيار الملف من الكمبيوتر -->
+                    <div id="computerUploadDiv">
+                        <input type="file" id="stemFileInput" class="w-full text-xs theme-text-sub file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer">
+                        <p class="text-[10px] text-slate-400 mt-1">يمكنك رفع ملفات PDF، صور، أو مستندات مباشرة.</p>
+                    </div>
+
+                    <!-- حقل إدخال الرابط الخارجي -->
+                    <div id="linkUploadDiv" class="hidden">
+                        <input type="url" id="linkInput" placeholder="https://drive.google.com/..." class="w-full theme-input border rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-indigo-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold theme-text-sub mb-1">وصف مختصر</label>
+                    <textarea id="descInput" rows="2" placeholder="تفاصيل بسيطة عن الماتريال..." class="w-full theme-input border rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500"></textarea>
+                </div>
+                <div class="pt-2 flex justify-end gap-3">
+                    <button type="button" onclick="toggleModal(false)" class="px-4 py-2 bg-slate-700/30 text-slate-300 text-xs font-bold rounded-xl transition">إلغاء</button>
+                    <button type="submit" id="submitBtn" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl transition">حفظ ونشر مباشر</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-5 left-5 bg-indigo-600 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-lg border border-indigo-400 hidden transition duration-300 z-50 flex items-center gap-2">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toastMsg">تم التحديث بنجاح!</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-6 text-center text-xs theme-text-sub transition-colors duration-300" dir="rtl">
+        <p>Created with ❤️ for STEM Dakahlia Students | By Hazem DK S'29</p>
+    </footer>
+
+    <!-- Firebase SDK & Real-time Integration Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            deleteDoc,
+            updateDoc,
+            increment,
+            doc,
+            onSnapshot, 
+            query, 
+            orderBy, 
+            serverTimestamp,
+            initializeFirestore,
+            persistentLocalCache,
+            persistentMultipleTabManager,
+            getDocs,
+            limit
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBP_hbhMb9gR6lKhz3QudQd1Ra0hKGY4yo",
+            authDomain: "stem-dk-hub41.firebaseapp.com",
+            projectId: "stem-dk-hub41",
+            storageBucket: "stem-dk-hub41.firebasestorage.app",
+            messagingSenderId: "130029604348",
+            appId: "1:130029604348:web:bd5973b63229611804f679",
+            measurementId: "G-6TCXRP4033"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        // كاش دائم في المتصفح (IndexedDB): من الزيارة التانية الداتا بتظهر فوراً من الجهاز
+        // والسيرفر بيبعت التغييرات بس. لو المتصفح مش بيدعمه بنرجع للوضع العادي.
+        let db;
+        try {
+            db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
+        } catch (e) {
+            console.warn("الكاش الدائم غير متاح:", e);
+            db = getFirestore(app);
+        }
+        const materialsRef = collection(db, "materials");
+
+        // ============================================================
+        //  الأداء: كل الداتا بتتحمّل زي الأول، لكن بنرسم 24 كارت بس في كل مرة
+        // ============================================================
+        const ITEMS_PER_PAGE = 24;
+        let liveMaterials = [];
+        let baselineSet = false;       // أول رد من السيرفر = نقطة البداية (مفيش إشعار)
+        let initialLoaded = false;
+        let fullLoaded = false;        // الاستعلام الكامل (كل الملفات) وصل من السيرفر؟
+        let showOnlyBookmarks = false;
+        let visibleCount = ITEMS_PER_PAGE;
+        let renderQueued = false;
+
+        const ESC_MAP = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+        function esc(v) { return String(v == null ? "" : v).replace(/[&<>"']/g, c => ESC_MAP[c]); }
+        function safeUrl(u) {
+            const s = String(u || "").trim();
+            return /^\s*(javascript|data|vbscript):/i.test(s) ? "#" : s;
+        }
+        function cmp(x, y) { return x === y ? 0 : (x < y ? -1 : 1); }
+
+        function secs(item) {
+            const c = item.createdAt;
+            if (!c) return Infinity; // لسه بيتكتب (serverTimestamp معلّق) = الأحدث
+            if (typeof c.seconds === "number") return c.seconds;
+            if (typeof c.toMillis === "function") return c.toMillis() / 1000;
+            const t = new Date(c).getTime();
+            return isNaN(t) ? 0 : t / 1000;
+        }
+
+        function getLikedPosts() {
+            const saved = localStorage.getItem("stem_dk_liked_posts");
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp) return "الآن";
+            const date = timestamp.seconds ? new Date(timestamp.seconds * 1000) : new Date(timestamp);
+            return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        function renderSkeleton(grid) {
+            const frag = document.createDocumentFragment();
+            for (let i = 0; i < 6; i++) {
+                const d = document.createElement("div");
+                d.className = "theme-card border rounded-2xl p-5 animate-pulse";
+                d.innerHTML = '<div class="h-4 w-1/3 bg-slate-500/20 rounded mb-4"></div><div class="h-4 w-3/4 bg-slate-500/20 rounded mb-3"></div><div class="h-3 w-full bg-slate-500/10 rounded mb-2"></div><div class="h-3 w-2/3 bg-slate-500/10 rounded mb-8"></div><div class="h-9 w-full bg-slate-500/10 rounded-lg"></div>';
+                frag.appendChild(d);
+            }
+            grid.replaceChildren(frag);
+        }
+
+        function buildCard(item, ctx) {
+            const canDelete = ctx.currentUser && (ctx.currentUser === item.author || ctx.currentUser === "Hazem DK S'29");
+            const isBookmarked = ctx.bmSet.has(item.id);
+            const isLiked = ctx.likedSet.has(item.id);
+            const link = esc(safeUrl(item.link));
+            const id = esc(item.id);
+
+            // ألوان مميزة لكل تصنيف (Category Tag)
+            let categoryBadge = '';
+            if (item.category === 'Exams') {
+                categoryBadge = '<span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">امتحانات</span>';
+            } else if (item.category === 'Revision') {
+                categoryBadge = '<span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">مراجعة</span>';
+            } else if (item.category === 'Capstone') {
+                categoryBadge = '<span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20">Capstone</span>';
+            } else {
+                categoryBadge = '<span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">LO Guide</span>';
+            }
+
+            const card = document.createElement("div");
+            card.className = "gradient-border rounded-2xl p-5 flex flex-col justify-between hover:neon-glow transition duration-300 theme-card relative group";
+            card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex gap-1.5 flex-wrap">
+                                ${item.featured ? '<span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20"><i class="fa-solid fa-fire text-[10px] ml-1"></i>مميز</span>' : ''}
+                                <span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">${esc(item.grade || 'Grade')}</span>
+                                <span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">${esc(item.subject || 'General')}</span>
+                                ${categoryBadge}
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="toggleBookmark('${id}')" class="text-xs ${isBookmarked ? 'text-amber-400' : 'text-slate-500 hover:text-amber-400'} transition p-1" title="حفظ في المفضلة">
+                                    <i class="${isBookmarked ? 'fa-solid' : 'fa-regular'} fa-bookmark"></i>
+                                </button>
+                                ${canDelete ? `<button onclick="deleteMaterial('${id}')" class="text-xs text-red-400 hover:text-red-300 transition p-1" title="حذف المادة"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+                            </div>
+                        </div>
+                        <h3 class="text-sm font-bold theme-text-main mb-2">${esc(item.title)}</h3>
+                        <p class="text-xs theme-text-sub mb-5 leading-relaxed">${esc(item.desc || 'لا يوجد وصف متاح')}</p>
+                    </div>
+                    <div>
+                        <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] theme-text-sub font-medium mb-3">
+                            <div class="flex flex-col">
+                                <span class="text-indigo-400 font-semibold"><i class="fa-regular fa-user ml-1"></i>${esc(item.author || 'Hazem')}</span>
+                                <span class="text-[10px] text-slate-400 mt-0.5"><i class="fa-regular fa-calendar ml-1 text-purple-400"></i>${formatDate(item.createdAt)}</span>
+                            </div>
+                            
+                            <button onclick="toggleLike('${id}')" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg ${isLiked ? 'bg-pink-600 text-white shadow-md shadow-pink-500/30' : 'bg-pink-500/10 hover:bg-pink-500/20 text-pink-400 border border-pink-500/20'} transition duration-200">
+                                <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart text-xs"></i>
+                                <span class="font-bold text-xs">${Number(item.likes) || 0}</span>
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button data-link="${link}" onclick="copyLink(this.dataset.link)" title="نسخ الرابط" class="p-2 text-xs theme-text-sub hover:text-indigo-400 theme-card border rounded-lg transition">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                            <a href="${link}" target="_blank" rel="noopener noreferrer" class="w-full text-center inline-flex items-center justify-center gap-1.5 text-xs text-indigo-400 font-bold hover:text-white bg-indigo-500/10 hover:bg-indigo-600 px-3 py-2 rounded-lg transition">
+                                <span>فتح / تحميل</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
+            return card;
+        }
+
+        // تجميع طلبات الرسم: لو جه أكتر من تحديث في نفس اللحظة نرسم مرة واحدة
+        function scheduleRender() {
+            if (renderQueued) return;
+            renderQueued = true;
+            requestAnimationFrame(() => { renderQueued = false; renderMaterials(); });
+        }
+
+        window.renderMaterials = function() {
+            const search = document.getElementById("searchInput").value.trim().toLowerCase();
+            const gradeFilter = document.getElementById("gradeFilter").value;
+            const semFilter = document.getElementById("semesterFilter").value;
+            const subjectFilter = document.getElementById("subjectFilter").value;
+            const catFilter = document.getElementById("categoryFilter").value;
+            const sortBy = document.getElementById("sortByInput").value;
+
+            const grid = document.getElementById("materialsGrid");
+            const emptyState = document.getElementById("emptyState");
+            const countElem = document.getElementById("materialsCount");
+            const wrap = document.getElementById("loadMoreWrap");
+            const btnText = document.getElementById("loadMoreText");
+            const btnIcon = document.getElementById("loadMoreIcon");
+            const btn = document.getElementById("loadMoreBtn");
+
+            if (countElem) countElem.innerText = fullLoaded ? liveMaterials.length : "…";
+
+            if (!initialLoaded && liveMaterials.length === 0) {
+                renderSkeleton(grid);
+                emptyState.classList.add("hidden");
+                wrap.classList.add("hidden");
+                return;
+            }
+
+            const bmSet = new Set(getBookmarks());
+
+            let filtered = liveMaterials.filter(m => {
+                if (showOnlyBookmarks && !bmSet.has(m.id)) return false;
+                if (gradeFilter !== "ALL" && m.grade !== gradeFilter) return false;
+                if (semFilter !== "ALL" && m.semester !== semFilter) return false;
+                if (subjectFilter !== "ALL" && m.subject !== subjectFilter) return false;
+                if (catFilter !== "ALL" && m.category !== catFilter) return false;
+                if (search && !(m._t.includes(search) || m._d.includes(search))) return false;
+                return true;
+            });
+
+            // الداتا جاية من السيرفر مرتبة بالأحدث، فنرتب بس لو المستخدم اختار ترتيب تاني
+            if (sortBy === "LIKES") {
+                filtered.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+            } else if (sortBy === "OLDEST") {
+                filtered = filtered.slice().reverse();
+            }
+
+            if (filtered.length === 0) {
+                if (!fullLoaded) {
+                    // لسه باقي الملفات بتتحمّل: ماننفعش نقول "مفيش نتائج" دلوقتي
+                    renderSkeleton(grid);
+                    emptyState.classList.add("hidden");
+                    btnText.innerText = "جاري تحميل باقي الملفات...";
+                    btnIcon.className = "fa-solid fa-spinner fa-spin text-xs";
+                    btn.disabled = true;
+                    wrap.classList.remove("hidden");
+                    return;
+                }
+                grid.replaceChildren();
+                emptyState.classList.remove("hidden");
+                wrap.classList.add("hidden");
+                return;
+            }
+            emptyState.classList.add("hidden");
+
+            const likedSet = new Set(getLikedPosts());
+            const savedUser = localStorage.getItem('user');
+            const currentUser = savedUser ? JSON.parse(savedUser).name : null;
+            const ctx = { bmSet, likedSet, currentUser };
+
+            // نبني الكروت المعروضة بس (24 × عدد مرات "عرض المزيد") في الذاكرة ونضيفها مرة واحدة
+            const frag = document.createDocumentFragment();
+            const visible = filtered.slice(0, visibleCount);
+            visible.forEach(item => frag.appendChild(buildCard(item, ctx)));
+            grid.replaceChildren(frag);
+
+            const remaining = filtered.length - visible.length;
+            if (!fullLoaded) {
+                btnText.innerText = "جاري تحميل باقي الملفات...";
+                btnIcon.className = "fa-solid fa-spinner fa-spin text-xs";
+                btn.disabled = true;
+                wrap.classList.remove("hidden");
+            } else if (remaining > 0) {
+                btnText.innerText = "عرض المزيد (" + remaining + " ملف متبقي)";
+                btnIcon.className = "fa-solid fa-chevron-down text-xs";
+                btn.disabled = false;
+                wrap.classList.remove("hidden");
+            } else {
+                wrap.classList.add("hidden");
+            }
+        };
+
+        window.applyFilters = function() {
+            visibleCount = ITEMS_PER_PAGE;
+            renderMaterials();
+        };
+
+        let searchTimer = null;
+        window.debouncedSearch = function() {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(window.applyFilters, 300);
+        };
+
+        window.loadMoreMaterials = function() {
+            visibleCount += ITEMS_PER_PAGE;
+            renderMaterials();
+        };
+
+        // ============================================================
+        //  الربط اللحظي بقاعدة البيانات (نفس الاستعلام الأصلي — كل الملفات)
+        // ============================================================
+        const q = query(materialsRef, orderBy("createdAt", "desc"));
+        onSnapshot(q, (snapshot) => {
+            const previousCount = liveMaterials.length;
+            const list = [];
+            let totalLikes = 0;
+
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                // نجهّز نص البحث مرة واحدة هنا بدل ما نعمله مع كل حرف
+                list.push({ id: docSnap.id, ...data, _t: (data.title || "").toLowerCase(), _d: (data.desc || "").toLowerCase() });
+                totalLikes += (data.likes || 0);
+            });
+            liveMaterials = list;
+
+            // أول رد حقيقي من السيرفر (مش من الكاش) هو نقطة البداية، وبعده أي زيادة = مادة جديدة
+            if (!snapshot.metadata.fromCache) {
+                if (baselineSet && list.length > previousCount) {
+                    showToast(`🚀 تم نشر مادة جديدة: ${list[0].title || 'مادة جديدة'}`);
+                }
+                baselineSet = true;
+                fullLoaded = true;
+            }
+            initialLoaded = true;
+
+            const likesElem = document.getElementById("totalLikesCount");
+            if (likesElem) likesElem.innerText = fullLoaded ? totalLikes : "…";
+
+            scheduleRender();
+        }, (error) => {
+            console.error("خطأ فايربيس: ", error);
+            initialLoaded = true;
+            fullLoaded = true;
+            scheduleRender();
+        });
+
+        renderMaterials(); // هيكل تحميل لحد ما أول بيانات توصل
+
+        // ============================================================
+        //  أول رسم سريع: أحدث 24 ملف بس (استعلام صغير بيرد في ثواني)
+        //  بالتوازي مع الاستعلام الكامل. لو الكامل وصل الأول بنتجاهله.
+        //  مفيش أي ملف بيتخبّى: الكل بيتحمّل في الخلفية وبيحل محله.
+        // ============================================================
+        getDocs(query(materialsRef, orderBy("createdAt", "desc"), limit(ITEMS_PER_PAGE))).then((snap) => {
+            if (initialLoaded) return;
+            const list = [];
+            snap.forEach((d) => {
+                const data = d.data();
+                list.push({ id: d.id, ...data, _t: (data.title || "").toLowerCase(), _d: (data.desc || "").toLowerCase() });
+            });
+            liveMaterials = list;
+            initialLoaded = true;
+            scheduleRender();
+        }).catch((e) => console.warn("تعذر الرسم السريع:", e));
+
+        window.toggleUploadMethod = function() {
+            const method = document.getElementById("uploadMethodSelect").value;
+            const computerDiv = document.getElementById("computerUploadDiv");
+            const linkDiv = document.getElementById("linkUploadDiv");
+            const linkInput = document.getElementById("linkInput");
+            const fileInput = document.getElementById("stemFileInput");
+
+            if (method === "computer") {
+                computerDiv.classList.remove("hidden");
+                linkDiv.classList.add("hidden");
+                linkInput.removeAttribute("required");
+            } else {
+                computerDiv.classList.add("hidden");
+                linkDiv.classList.remove("hidden");
+                linkInput.setAttribute("required", "true");
+                fileInput.value = "";
+            }
+        };
+
+        // دالة الإرسال مع تحديث اسم الـ Preset إلى STEM_DK_HUB واستخدام auto/upload
+        window.handleFormSubmit = async function(event) {
+            event.preventDefault();
+            const savedUser = localStorage.getItem('user');
+            
+            if (!savedUser) {
+                showToast("عفواً! يجب عليك تسجيل الدخول أولاً.");
+                toggleModal(false);
+                return;
+            }
+
+            const userData = JSON.parse(savedUser);
+            const authorName = userData.name || "Hazem DK S'29";
+            const method = document.getElementById("uploadMethodSelect").value;
+            
+            let finalFileLink = "";
+            const submitBtn = document.getElementById("submitBtn");
+            submitBtn.disabled = true;
+            submitBtn.innerText = "جاري النشر...";
+
+            try {
+                if (method === "computer") {
+                    const fileInput = document.getElementById("stemFileInput");
+                    if (!fileInput.files[0]) {
+                        showToast("الرجاء اختيار ملف من الكمبيوتر أولاً.");
+                        submitBtn.disabled = false;
+                        submitBtn.innerText = "حفظ ونشر مباشر";
+                        return;
+                    }
+
+                    showToast("جاري رفع الملف للسحابة...");
+                    const file = fileInput.files[0];
+                    const formData = new FormData();
+                    formData.append("file", file);
+                    formData.append("upload_preset", "STEM_DK_HUB");
+
+                    const response = await fetch("https://api.cloudinary.com/v1_1/vv8bemj0/auto/upload", {
+                        method: "POST",
+                        body: formData
+                    });
+                    const data = await response.json();
+
+                    if (data.secure_url) {
+                        finalFileLink = data.secure_url;
+                    } else {
+                        console.error("Cloudinary Error:", data);
+                        throw new Error(data.error?.message || "فشل الرفع لـ Cloudinary");
+                    }
+                } else {
+                    finalFileLink = document.getElementById("linkInput").value;
+                }
+
+                const newMaterial = {
+                    title: document.getElementById("titleInput").value,
+                    grade: document.getElementById("gradeInput").value,
+                    subject: document.getElementById("subjectInput").value,
+                    semester: document.getElementById("semesterInput").value,
+                    category: document.getElementById("categoryInput").value,
+                    link: finalFileLink,
+                    desc: document.getElementById("descInput").value,
+                    author: authorName,
+                    createdAt: serverTimestamp(),
+                    likes: 0,
+                    featured: false
+                };
+
+                await addDoc(materialsRef, newMaterial);
+                document.getElementById("materialForm").reset();
+                toggleUploadMethod();
+                toggleModal(false);
+                showToast("تم رفع ونشر الماتريال بنجاح للجميع!");
+            } catch (error) {
+                console.error(error);
+                showToast("حدث خطأ أثناء الرفع، تأكد من إعدادات الـ Unsigned Preset والاتصال.");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "حفظ ونشر مباشر";
+            }
+        };
+
+        window.toggleLike = async function(id) {
+            let likedPosts = getLikedPosts();
+            const docRef = doc(db, "materials", id);
+
+            if (likedPosts.includes(id)) {
+                likedPosts = likedPosts.filter(postId => postId !== id);
+                localStorage.setItem("stem_dk_liked_posts", JSON.stringify(likedPosts));
+                try {
+                    await updateDoc(docRef, { likes: increment(-1) });
+                    showToast("تم إلغاء الإعجاب");
+                } catch (error) { console.error(error); }
+            } else {
+                likedPosts.push(id);
+                localStorage.setItem("stem_dk_liked_posts", JSON.stringify(likedPosts));
+                try {
+                    await updateDoc(docRef, { likes: increment(1) });
+                    showToast("تم إضافة الإعجاب ❤️");
+                } catch (error) { console.error(error); }
+            }
+        };
+
+        window.resetFilters = function() {
+            document.getElementById("searchInput").value = "";
+            document.getElementById("gradeFilter").value = "ALL";
+            document.getElementById("semesterFilter").value = "ALL";
+            document.getElementById("subjectFilter").value = "ALL";
+            document.getElementById("categoryFilter").value = "ALL";
+            document.getElementById("sortByInput").value = "NEWEST";
+            showOnlyBookmarks = false;
+            const btn = document.getElementById("bookmarkFilterBtn");
+            if(btn) btn.classList.remove("bg-amber-500/20", "border-amber-500");
+            applyFilters();
+            showToast("تمت إعادة ضبط جميع الفلاتر بنجاح");
+        };
+
+        window.deleteMaterial = async function(id) {
+            if (confirm("هل أنت متأكد من إزالة هذه المادة من المنصة للجميع؟")) {
+                try {
+                    await deleteDoc(doc(db, "materials", id));
+                    showToast("تم حذف المادة بنجاح.");
+                } catch (error) { console.error(error); }
+            }
+        };
+
+        window.initTheme = function() {
+            const savedTheme = localStorage.getItem('theme');
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (savedTheme === 'light') {
+                html.classList.remove('dark');
+                if(themeIcon) themeIcon.className = 'fa-solid fa-sun text-yellow-400';
+            } else {
+                html.classList.add('dark');
+                if(themeIcon) themeIcon.className = 'fa-solid fa-moon text-indigo-400';
+            }
+            updateBookmarkBadge();
+        };
+
+        window.toggleTheme = function() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+                if(themeIcon) themeIcon.className = 'fa-solid fa-sun text-yellow-400';
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+                if(themeIcon) themeIcon.className = 'fa-solid fa-moon text-indigo-400';
+            }
+        };
+
+        function getBookmarks() {
+            const saved = localStorage.getItem("stem_dk_bookmarks");
+            return saved ? JSON.parse(saved) : [];
+        }
+
+        window.toggleBookmark = function(id) {
+            let bookmarks = getBookmarks();
+            if (bookmarks.includes(id)) {
+                bookmarks = bookmarks.filter(b => b !== id);
+                showToast("تمت الإزالة من المفضلة");
+            } else {
+                bookmarks.push(id);
+                showToast("تمت الإضافة إلى المفضلة ⭐");
+            }
+            localStorage.setItem("stem_dk_bookmarks", JSON.stringify(bookmarks));
+            updateBookmarkBadge();
+            renderMaterials();
+        };
+
+        function updateBookmarkBadge() {
+            const bookmarks = getBookmarks();
+            const badge = document.getElementById("bookmarkBadge");
+            if (badge) {
+                if (bookmarks.length > 0) {
+                    badge.innerText = bookmarks.length;
+                    badge.classList.remove("hidden");
+                } else {
+                    badge.classList.add("hidden");
+                }
+            }
+        }
+
+        window.toggleBookmarksView = function() {
+            showOnlyBookmarks = !showOnlyBookmarks;
+            const btn = document.getElementById("bookmarkFilterBtn");
+            if (showOnlyBookmarks) {
+                if(btn) btn.classList.add("bg-amber-500/20", "border-amber-500");
+                showToast("عرض المفضلة المحفوظة فقط");
+            } else {
+                if(btn) btn.classList.remove("bg-amber-500/20", "border-amber-500");
+                showToast("عرض كل الماتريال");
+            }
+            applyFilters();
+        };
+
+        window.showToast = function(message) {
+            const toast = document.getElementById("toast");
+            const toastMsg = document.getElementById("toastMsg");
+            if(toast && toastMsg) {
+                toastMsg.innerText = message;
+                toast.classList.remove("hidden");
+                setTimeout(() => {
+                    toast.classList.add("hidden");
+                }, 3000);
+            }
+        };
+
+        window.copyLink = function(link) {
+            navigator.clipboard.writeText(link);
+            showToast("تم نسخ رابط الماتريال بنجاح!");
+        };
+
+        window.toggleModal = function(show) {
+            if (show) {
+                const savedUser = localStorage.getItem('user');
+                if (!savedUser) {
+                    showToast("عفواً! يجب عليك تسجيل الدخول أولاً لتتمكن من إضافة ماتريال.");
+                    loginWithGoogle();
+                    return;
+                }
+            }
+            const modal = document.getElementById("uploadModal");
+            if (modal) {
+                if (show) modal.classList.remove("hidden");
+                else modal.classList.add("hidden");
+            }
+        };
+
+        initTheme();
+    </script>
+
+    <!-- Google Custom Token Client Auth Logic -->
+    <script>
+        let tokenClient;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('user');
+            if (savedUser) {
+                showUserProfile(JSON.parse(savedUser));
+            }
+
+            if (window.google && window.google.accounts) {
+                tokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: '710155706496-t0iu67cj7qu3ovf432dcldguv862bhdp.apps.googleusercontent.com',
+                    scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
+                    callback: (response) => {
+                        if (response && response.access_token) {
+                            fetchUserProfile(response.access_token);
+                        }
+                    },
+                });
+            }
+        });
+
+        window.loginWithGoogle = function() {
+            if (tokenClient) {
+                tokenClient.requestAccessToken();
+            } else {
+                alert("جاري تحميل خدمات جوجل، حاول مرة أخرى بعد ثانية.");
+            }
+        }
+
+        function fetchUserProfile(accessToken) {
+            fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                headers: { 'Authorization': `Bearer ` + accessToken }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const userData = {
+                    name: data.name,
+                    picture: data.picture,
+                    email: data.email
+                };
+                localStorage.setItem('user', JSON.stringify(userData));
+                showUserProfile(userData);
+                if(window.renderMaterials) window.renderMaterials();
+                showToast("تم تسجيل الدخول بنجاح أهلاً بك يا " + data.name);
+            })
+            .catch(error => {
+                console.error('Error fetching user info:', error);
+            });
+        }
+
+        function showUserProfile(user) {
+            const authContainer = document.getElementById('authContainer');
+            if (authContainer) {
+                authContainer.innerHTML = `
+                    <div class="flex items-center gap-2 theme-card px-3 py-1.5 rounded-full border">
+                        <img src="${user.picture}" alt="${user.name}" class="w-8 h-8 rounded-full border border-indigo-400">
+                        <span class="theme-text-main text-sm font-medium">${user.name}</span>
+                        <button onclick="logout()" class="text-xs text-red-400 hover:text-red-300 ml-2 bg-slate-800 px-2 py-1 rounded">خروج</button>
+                    </div>
+                `;
+            }
+        }
+
+        window.logout = function() {
+            localStorage.removeItem('user');
+            location.reload();
+        }
+    </script>
+</body>
+</html>
