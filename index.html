@@ -37,50 +37,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         .top-announcement-bar {
-  width: 100%;
-  background: linear-gradient(90deg, #5b21b6 0%, #7c3aed 50%, #6d28d9 100%);
-  color: #ffffff;
-  text-align: center;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  position: relative;
-  z-index: 1000;
-}
+            width: 100%;
+            background: linear-gradient(90deg, #5b21b6 0%, #7c3aed 50%, #6d28d9 100%);
+            color: #ffffff;
+            text-align: center;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            z-index: 1000;
+        }
 
-.top-announcement-bar .pulse-dot {
-  width: 8px;
-  height: 8px;
-  background-color: #34d399;
-  border-radius: 50%;
-  display: inline-block;
-  box-shadow: 0 0 8px #34d399;
-}
+        .top-announcement-bar .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #34d399;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #34d399;
+        }
 
-.top-announcement-bar .separator {
-  opacity: 0.6;
-  margin: 0 4px;
-}
+        .top-announcement-bar .separator {
+            opacity: 0.6;
+            margin: 0 4px;
+        }
 
-.top-announcement-bar .supporter-badge {
-  background-color: rgba(0, 0, 0, 0.25);
-  padding: 2px 10px;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  letter-spacing: 0.3px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
+        .top-announcement-bar .supporter-badge {
+            background-color: rgba(0, 0, 0, 0.25);
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            letter-spacing: 0.3px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
 
-.top-announcement-bar .supporter-badge strong {
-  color: #fde047; /* لون ذهبي خفيف لإبراز الاسم */
-  font-weight: 700;
-}
+        .top-announcement-bar .supporter-badge strong {
+            color: #fde047;
+            font-weight: 700;
+        }
+
         body {
             font-family: 'Cairo', sans-serif;
             transition: background-color 0.3s, color 0.3s;
@@ -156,16 +157,16 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
-<!-- الشريط العلوي -->
-<div class="top-announcement-bar">
-  <span class="pulse-dot"></span>
-  <span>المنصة الرسمية لمشاركة ملخصات وماتريال STEM الدقهلية | إعداد Hazem DK S'29</span>
-  <span class="separator">•</span>
-  <span class="supporter-badge">Supported by <strong>Mahmoud Mostafa Dk S'29</strong></span>
-  <span class="separator">•</span>
-   <span class="supporter-badge">Created by <strong>Hazem Negm DK S'29</strong></span>
-</div>
-    <!-- Top Announcement Bar -->
+    <!-- الشريط العلوي -->
+    <div class="top-announcement-bar">
+      <span class="pulse-dot"></span>
+      <span>المنصة الرسمية لمشاركة ملخصات وماتريال STEM الدقهلية | إعداد Hazem DK S'29</span>
+      <span class="separator">•</span>
+      <span class="supporter-badge">Supported by <strong>Mahmoud Mostafa</strong></span>
+      <span class="separator">•</span>
+       <span class="supporter-badge">Created by <strong>Hazem DK S'29</strong></span>
+    </div>
+
     <!-- Header Section -->
     <header class="sticky top-0 z-50 theme-header backdrop-blur-xl border-b transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -178,7 +179,7 @@
                     <h1 class="text-xl font-black theme-text-main tracking-wide">
                         STEM <span class="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">DK HUB</span>
                     </h1>
-                    <p class="text-[11px] text-indigo-400 font-semibold tracking-wider">Created by Hazem Negm DK S'29</p>
+                    <p class="text-[11px] text-indigo-400 font-semibold tracking-wider">Created by Hazem DK S'29</p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
@@ -451,7 +452,7 @@
 
     <!-- Footer -->
     <footer class="border-t border-slate-800 py-6 text-center text-xs theme-text-sub transition-colors duration-300" dir="rtl">
-        <p>Created with ❤️ for STEM Dakahlia Students | By Hazem Negm DK S'29</p>
+        <p>Created with ❤️ for STEM Dakahlia Students | By Hazem DK S'29</p>
     </footer>
 
     <!-- Firebase SDK & Real-time Integration Script -->
@@ -467,7 +468,8 @@
             doc,
             onSnapshot, 
             query, 
-            orderBy, 
+            orderBy,
+            limit,
             serverTimestamp 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
@@ -489,7 +491,7 @@
         let isFirstLoad = true;
         let showOnlyBookmarks = false;
 
-        // إعدادات التسريع (الدفعات والكاش والبحث المؤجل)
+        // إعدادات التسريع (تقييد التحميل الأولي من فايربيس لأحدث 60 ملف لضمان السرعة القصوى)
         const ITEMS_PER_PAGE = 24;
         let currentLimit = ITEMS_PER_PAGE;
         let searchTimeout = null;
@@ -500,7 +502,7 @@
             const cachedData = localStorage.getItem(CACHE_KEY);
             if (cachedData) {
                 liveMaterials = JSON.parse(cachedData);
-                setTimeout(() => renderMaterials(true), 20);
+                setTimeout(() => renderMaterials(true), 10);
             }
         } catch (e) { console.warn("Cache read error"); }
 
@@ -523,7 +525,8 @@
             return saved ? JSON.parse(saved) : [];
         }
 
-        const q = query(materialsRef, orderBy("createdAt", "desc"));
+        // استعلام محسّن يجلب أحدث 60 ملفاً فقط في البداية لتسريع الفتح لأقصى درجة
+        const q = query(materialsRef, orderBy("createdAt", "desc"), limit(60));
         onSnapshot(q, (snapshot) => {
             const previousCount = liveMaterials.length;
             const freshMaterials = [];
@@ -628,7 +631,7 @@
             const fragment = document.createDocumentFragment();
 
             itemsToRender.forEach(item => {
-                const canDelete = currentUser && (currentUser === item.author || currentUser === "Hazem Negm DK S'29");
+                const canDelete = currentUser && (currentUser === item.author || currentUser === "Hazem DK S'29");
                 const isBookmarked = bookmarks.includes(item.id);
                 const isLiked = likedPosts.includes(item.id);
 
@@ -713,7 +716,6 @@
             }
         };
 
-        // دالة الإرسال مع تحديث اسم الـ Preset إلى STEM_DK_HUB واستخدام auto/upload
         window.handleFormSubmit = async function(event) {
             event.preventDefault();
             const savedUser = localStorage.getItem('user');
