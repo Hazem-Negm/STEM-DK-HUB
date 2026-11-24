@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STEM DK Material Hub | منصة المواد العلمية الشاملة</title>
-    <!-- كود التوثيق الخاص بك -->
     <meta name="google-site-verification" content="V2vLylp8_FxIdICy_EEwdqtk9FP50zRgrLyC7RVAN_0" />
     <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -31,111 +29,59 @@
             }
         }
     </script>
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts (Cairo) -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         .top-announcement-bar {
-  width: 100%;
-  background: linear-gradient(90deg, #5b21b6 0%, #7c3aed 50%, #6d28d9 100%);
-  color: #ffffff;
-  text-align: center;
-  padding: 8px 16px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  position: relative;
-  z-index: 1000;
-}
+            width: 100%;
+            background: linear-gradient(90deg, #5b21b6 0%, #7c3aed 50%, #6d28d9 100%);
+            color: #ffffff;
+            text-align: center;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            z-index: 1000;
+        }
+        .top-announcement-bar .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #34d399;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #34d399;
+        }
+        .top-announcement-bar .separator { opacity: 0.6; margin: 0 4px; }
+        .top-announcement-bar .supporter-badge {
+            background-color: rgba(0, 0, 0, 0.25);
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            letter-spacing: 0.3px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .top-announcement-bar .supporter-badge strong { color: #fde047; font-weight: 700; }
 
-.top-announcement-bar .pulse-dot {
-  width: 8px;
-  height: 8px;
-  background-color: #34d399;
-  border-radius: 50%;
-  display: inline-block;
-  box-shadow: 0 0 8px #34d399;
-}
+        body { font-family: 'Cairo', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        html.dark body { background-color: #05070a; color: #e6edf3; }
+        html.dark .theme-card { background-color: #0d1117 !important; border-color: #161b22 !important; }
+        html.dark .theme-header { background-color: rgba(5, 7, 10, 0.8) !important; border-color: #161b22 !important; }
+        html.dark .theme-text-main { color: #ffffff !important; }
+        html.dark .theme-text-sub { color: #94a3b8 !important; }
+        html.dark .theme-input { background-color: #0d1117 !important; border-color: #161b22 !important; color: #e6edf3 !important; }
 
-.top-announcement-bar .separator {
-  opacity: 0.6;
-  margin: 0 4px;
-}
-
-.top-announcement-bar .supporter-badge {
-  background-color: rgba(0, 0, 0, 0.25);
-  padding: 2px 10px;
-  border-radius: 999px;
-  font-size: 0.85rem;
-  letter-spacing: 0.3px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.top-announcement-bar .supporter-badge strong {
-  color: #fde047; /* لون ذهبي خفيف لإبراز الاسم */
-  font-weight: 700;
-}
-        body {
-            font-family: 'Cairo', sans-serif;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        /* Dark Mode Setup (Default) */
-        html.dark body {
-            background-color: #05070a;
-            color: #e6edf3;
-        }
-        html.dark .theme-card {
-            background-color: #0d1117 !important;
-            border-color: #161b22 !important;
-        }
-        html.dark .theme-header {
-            background-color: rgba(5, 7, 10, 0.8) !important;
-            border-color: #161b22 !important;
-        }
-        html.dark .theme-text-main {
-            color: #ffffff !important;
-        }
-        html.dark .theme-text-sub {
-            color: #94a3b8 !important;
-        }
-        html.dark .theme-input {
-            background-color: #0d1117 !important;
-            border-color: #161b22 !important;
-            color: #e6edf3 !important;
-        }
-
-        /* Light Mode Setup */
-        html:not(.dark) body {
-            background-color: #f8fafc;
-            color: #0f172a;
-        }
-        html:not(.dark) .theme-card {
-            background-color: #ffffff !important;
-            border-color: #e2e8f0 !important;
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-        }
-        html:not(.dark) .theme-header {
-            background-color: rgba(255, 255, 255, 0.85) !important;
-            border-color: #e2e8f0 !important;
-        }
-        html:not(.dark) .theme-text-main {
-            color: #0f172a !important;
-        }
-        html:not(.dark) .theme-text-sub {
-            color: #475569 !important;
-        }
-        html:not(.dark) .theme-input {
-            background-color: #ffffff !important;
-            border-color: #cbd5e1 !important;
-            color: #0f172a !important;
-        }
+        html:not(.dark) body { background-color: #f8fafc; color: #0f172a; }
+        html:not(.dark) .theme-card { background-color: #ffffff !important; border-color: #e2e8f0 !important; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1); }
+        html:not(.dark) .theme-header { background-color: rgba(255, 255, 255, 0.85) !important; border-color: #e2e8f0 !important; }
+        html:not(.dark) .theme-text-main { color: #0f172a !important; }
+        html:not(.dark) .theme-text-sub { color: #475569 !important; }
+        html:not(.dark) .theme-input { background-color: #ffffff !important; border-color: #cbd5e1 !important; color: #0f172a !important; }
 
         .gradient-border {
             border: 1px solid transparent;
@@ -146,9 +92,7 @@
             background: linear-gradient(#ffffff, #ffffff) padding-box,
                         linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(168, 85, 247, 0.2)) border-box;
         }
-        .neon-glow {
-            box-shadow: 0 0 20px -3px rgba(99, 102, 241, 0.25);
-        }
+        .neon-glow { box-shadow: 0 0 20px -3px rgba(99, 102, 241, 0.25); }
         .hero-pattern {
             background-image: radial-gradient(rgba(99, 102, 241, 0.15) 1px, transparent 1px);
             background-size: 24px 24px;
@@ -156,16 +100,15 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
-<!-- الشريط العلوي -->
-<div class="top-announcement-bar">
-  <span class="pulse-dot"></span>
-  <span>المنصة الرسمية لمشاركة ملخصات وماتريال STEM الدقهلية | إعداد Hazem DK S'29</span>
-  <span class="separator">•</span>
-  <span class="supporter-badge">Supported by <strong>Mahmoud Mostafa</strong></span>
-  <span class="separator">•</span>
-   <span class="supporter-badge">Created by <strong>Hazem DK S'29</strong></span>
-</div>
-    <!-- Top Announcement Bar -->
+    <div class="top-announcement-bar">
+      <span class="pulse-dot"></span>
+      <span>المنصة الرسمية لمشاركة ملخصات وماتريال STEM الدقهلية | إعداد Hazem DK S'29</span>
+      <span class="separator">•</span>
+      <span class="supporter-badge">Supported by <strong>Mahmoud Mostafa</strong></span>
+      <span class="separator">•</span>
+      <span class="supporter-badge">Created by <strong>Hazem DK S'29</strong></span>
+    </div>
+
     <!-- Header Section -->
     <header class="sticky top-0 z-50 theme-header backdrop-blur-xl border-b transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
@@ -182,18 +125,15 @@
                 </div>
             </div>
             <div class="flex items-center gap-3">
-                <!-- زر مفضلاتي -->
                 <button onclick="toggleBookmarksView()" id="bookmarkFilterBtn" title="المفضلة المحفوظة" class="p-2.5 rounded-xl theme-card border text-slate-300 hover:text-indigo-400 transition relative">
                     <i class="fa-solid fa-bookmark text-amber-400"></i>
                     <span id="bookmarkBadge" class="absolute -top-1 -right-1 bg-amber-500 text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
                 </button>
 
-                <!-- زر التبديل بين الوضع المظلم والواضح -->
                 <button onclick="toggleTheme()" id="themeToggleBtn" title="تغيير المظهر" class="p-2.5 rounded-xl theme-card border text-slate-300 hover:text-indigo-400 transition">
                     <i class="fa-solid fa-moon text-indigo-400" id="themeIcon"></i>
                 </button>
 
-                <!-- مكان حساب المستخدم أو زر تسجيل الدخول -->
                 <div id="authContainer" class="flex items-center gap-3">
                     <button onclick="loginWithGoogle()" class="flex items-center gap-2 bg-white hover:bg-gray-100 text-gray-800 text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-md">
                         <i class="fa-brands fa-google text-red-500"></i>
@@ -201,7 +141,6 @@
                     </button>
                 </div>
 
-                <!-- زر إضافة مادة جديدة -->
                 <button onclick="toggleModal(true)" class="relative group overflow-hidden rounded-xl p-px font-bold text-xs">
                     <span class="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600"></span>
                     <span class="relative block px-5 py-2.5 rounded-[11px] theme-card transition duration-300 group-hover:bg-transparent theme-text-main group-hover:text-white flex items-center gap-2">
@@ -223,31 +162,26 @@
             <div class="max-w-3xl relative z-10">
                 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold mb-4">
                     <span class="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
-                    تحديثات المناهج الدراسية (مزامنة حية)
+                    منصة الماتريال الشاملة
                 </div>
                 <h2 class="text-3xl sm:text-5xl font-black theme-text-main leading-tight tracking-tight">
                     مكتبة الماتريال الشاملة <br>
                     <span class="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">لطلاب مدرسة المتفوقين بالدقهلية</span>
                 </h2>
                 <p class="theme-text-sub text-sm sm:text-base mt-4 leading-relaxed font-medium">
-                    تصفح، حمل، وشارك الملازم والـ LOs والامتحانات السابقة والمراجعات بسهولة وفي الوقت الحقيقي.
+                    تصفح، حمل، وشارك الملازم والـ LOs والامتحانات السابقة والمراجعات بسهولة تامة.
                 </p>
                 
-                <!-- عداد الإحصائيات -->
                 <div class="mt-6 flex flex-wrap gap-4 text-xs theme-text-sub">
                     <div class="inline-flex items-center gap-2 bg-indigo-500/5 px-4 py-2 rounded-xl border border-indigo-500/20">
                         <i class="fa-solid fa-folder-open text-indigo-400"></i>
-                        <span>إجمالي الماتريال: <strong id="materialsCount" class="text-indigo-400 font-bold">0</strong> ملفات</span>
-                    </div>
-                    <div class="inline-flex items-center gap-2 bg-purple-500/5 px-4 py-2 rounded-xl border border-purple-500/20">
-                        <i class="fa-solid fa-heart text-pink-500"></i>
-                        <span>إجمالي التفاعلات: <strong id="totalLikesCount" class="text-purple-400 font-bold">0</strong> إعجاب</span>
+                        <span>المعروض حالياً: <strong id="materialsCount" class="text-indigo-400 font-bold">0</strong> ملفات</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Controls & Filters -->
+        <!-- Controls & Filters (Math & Selected Languages Only) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 mb-8" dir="rtl">
             <div class="relative lg:col-span-2">
                 <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
@@ -278,7 +212,7 @@
                         <option value="Physics">Physics</option>
                         <option value="Chemistry">Chemistry</option>
                         <option value="Biology">Biology</option>
-                        <option value="Pure Math">Pure Math</option>
+                        <option value="Math">Math</option>
                         <option value="Mechanics">Mechanics</option>
                         <option value="Computer Science">Computer Science</option>
                         <option value="Capstone">Capstone / FABLAB</option>
@@ -288,10 +222,7 @@
                         <option value="English">English</option>
                         <option value="French">اللغة الفرنسية (French)</option>
                         <option value="German">اللغة الألمانية (German)</option>
-                        <option value="Italian">اللغة الإيطالية (Italian)</option>
-                        <option value="Spanish">اللغة الإسبانية (Spanish)</option>
                         <option value="Social Studies">دراسات اجتماعية (Social Studies)</option>
-                        <option value="Humanities">Humanities</option>
                     </optgroup>
                 </select>
             </div>
@@ -322,6 +253,15 @@
                 <i class="fa-solid fa-rotate-right"></i>
                 <span>إعادة ضبط الفلاتر</span>
             </button>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="flex flex-col items-center justify-center py-20" dir="rtl">
+            <div class="relative w-14 h-14">
+                <div class="absolute inset-0 rounded-full border-4 border-indigo-500/20"></div>
+                <div class="absolute inset-0 rounded-full border-4 border-indigo-500 border-t-transparent animate-spin"></div>
+            </div>
+            <p class="text-sm font-bold text-indigo-400 mt-4 animate-pulse">جاري تحميل الماتريال...</p>
         </div>
 
         <!-- Cards Grid -->
@@ -366,7 +306,7 @@
                                 <option value="Physics">Physics</option>
                                 <option value="Chemistry">Chemistry</option>
                                 <option value="Biology">Biology</option>
-                                <option value="Pure Math">Pure Math</option>
+                                <option value="Math">Math</option>
                                 <option value="Mechanics">Mechanics</option>
                                 <option value="Computer Science">Computer Science</option>
                                 <option value="Capstone">Capstone / FABLAB</option>
@@ -376,10 +316,7 @@
                                 <option value="English">English</option>
                                 <option value="French">اللغة الفرنسية (French)</option>
                                 <option value="German">اللغة الألمانية (German)</option>
-                                <option value="Italian">اللغة الإيطالية (Italian)</option>
-                                <option value="Spanish">اللغة الإسبانية (Spanish)</option>
                                 <option value="Social Studies">دراسات اجتماعية (Social Studies)</option>
-                                <option value="Humanities">Humanities</option>
                             </optgroup>
                         </select>
                     </div>
@@ -403,7 +340,6 @@
                     </div>
                 </div>
 
-                <!-- اختيار طريقة إرفاق الملف (Cloudinary أو رابط خارجي) -->
                 <div class="p-3 theme-card border rounded-xl space-y-3">
                     <label class="block text-xs font-bold theme-text-sub">طريقة إرفاق الملف *</label>
                     <select id="uploadMethodSelect" onchange="toggleUploadMethod()" class="w-full theme-input border rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-indigo-500 font-semibold cursor-pointer">
@@ -411,13 +347,11 @@
                         <option value="link">إدخال رابط خارجي (Google Drive / موقع آخر)</option>
                     </select>
 
-                    <!-- حقل اختيار الملف من الكمبيوتر -->
                     <div id="computerUploadDiv">
                         <input type="file" id="stemFileInput" class="w-full text-xs theme-text-sub file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500 cursor-pointer">
                         <p class="text-[10px] text-slate-400 mt-1">يمكنك رفع ملفات PDF، صور، أو مستندات مباشرة.</p>
                     </div>
 
-                    <!-- حقل إدخال الرابط الخارجي -->
                     <div id="linkUploadDiv" class="hidden">
                         <input type="url" id="linkInput" placeholder="https://drive.google.com/..." class="w-full theme-input border rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-indigo-500">
                     </div>
@@ -435,18 +369,16 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-5 left-5 bg-indigo-600 text-white text-xs font-bold px-4 py-3 rounded-xl shadow-lg border border-indigo-400 hidden transition duration-300 z-50 flex items-center gap-2">
         <i class="fa-solid fa-circle-check"></i>
         <span id="toastMsg">تم التحديث بنجاح!</span>
     </div>
 
-    <!-- Footer -->
     <footer class="border-t border-slate-800 py-6 text-center text-xs theme-text-sub transition-colors duration-300" dir="rtl">
-        <p>Created with ❤️ for STEM Dakahlia Students | By Hazem DK S'29</p>
+        <p>Created with ❤️ for STEM Dakahlia Students | By Hazem DK S'29 | Supported by Mahmoud Mostafa</p>
     </footer>
 
-    <!-- Firebase SDK & Real-time Integration Script -->
+    <!-- Firebase & Logic Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { 
@@ -457,28 +389,39 @@
             updateDoc,
             increment,
             doc,
-            onSnapshot, 
+            onSnapshot,
             query, 
-            orderBy, 
+            orderBy,
             serverTimestamp 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBP_hbhMb9gR6lKhz3QudQd1Ra0hKGY4yo",
-            authDomain: "stem-dk-hub41.firebaseapp.com",
-            projectId: "stem-dk-hub41",
-            storageBucket: "stem-dk-hub41.firebasestorage.app",
-            messagingSenderId: "130029604348",
-            appId: "1:130029604348:web:bd5973b63229611804f679",
-            measurementId: "G-6TCXRP4033"
-        };
+       // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBB_1os0VSbMbcLfKNlj5IhiuEKOByXEWo",
+  authDomain: "stem-dk-material-hub.firebaseapp.com",
+  projectId: "stem-dk-material-hub",
+  storageBucket: "stem-dk-material-hub.firebasestorage.app",
+  messagingSenderId: "994634476686",
+  appId: "1:994634476686:web:5de088ec052fb2dc452ddf",
+  measurementId: "G-L2MXHJRD8X"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const materialsRef = collection(db, "materials");
 
-        let liveMaterials = [];
-        let isFirstLoad = true;
+        let allMaterials = [];
         let showOnlyBookmarks = false;
 
         function getLikedPosts() {
@@ -486,31 +429,10 @@
             return saved ? JSON.parse(saved) : [];
         }
 
-        const q = query(materialsRef, orderBy("createdAt", "desc"));
-        onSnapshot(q, (snapshot) => {
-            const previousCount = liveMaterials.length;
-            liveMaterials = [];
-            let totalLikes = 0;
-            
-            snapshot.forEach((docSnap) => {
-                const data = docSnap.data();
-                liveMaterials.push({ id: docSnap.id, ...data });
-                totalLikes += (data.likes || 0);
-            });
-
-            if (!isFirstLoad && liveMaterials.length > previousCount) {
-                const newestItem = liveMaterials[0];
-                showToast(`🚀 تم نشر مادة جديدة: ${newestItem.title || 'مادة جديدة'}`);
-            }
-            isFirstLoad = false;
-
-            const likesElem = document.getElementById("totalLikesCount");
-            if(likesElem) likesElem.innerText = totalLikes;
-
-            renderMaterials();
-        }, (error) => {
-            console.error("خطأ فايربيس: ", error);
-        });
+        function getBookmarks() {
+            const saved = localStorage.getItem("stem_dk_bookmarks");
+            return saved ? JSON.parse(saved) : [];
+        }
 
         function formatDate(timestamp) {
             if (!timestamp) return "الآن";
@@ -518,10 +440,26 @@
             return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' });
         }
 
+        function initRealtimeListener() {
+            const q = query(materialsRef, orderBy("createdAt", "desc"));
+            onSnapshot(q, (snapshot) => {
+                allMaterials = [];
+                snapshot.forEach(docSnap => {
+                    allMaterials.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                renderMaterials();
+            }, (error) => {
+                console.error("Firestore Error:", error);
+            });
+        }
+
         window.renderMaterials = function() {
+            const loader = document.getElementById("loadingSpinner");
+            if (loader) loader.classList.add("hidden");
+
             const bookmarks = getBookmarks();
             const likedPosts = getLikedPosts();
-            const search = document.getElementById("searchInput").value.toLowerCase();
+            const search = document.getElementById("searchInput").value.trim().toLowerCase();
             const gradeFilter = document.getElementById("gradeFilter").value;
             const semFilter = document.getElementById("semesterFilter").value;
             const subjectFilter = document.getElementById("subjectFilter").value;
@@ -532,40 +470,42 @@
             const emptyState = document.getElementById("emptyState");
             const countElem = document.getElementById("materialsCount");
 
-            if(countElem) countElem.innerText = liveMaterials.length;
-            grid.innerHTML = "";
-
-            const currentUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).name : null;
-
-            let filtered = liveMaterials.filter(m => {
+            let filtered = allMaterials.filter(m => {
                 if (showOnlyBookmarks && !bookmarks.includes(m.id)) return false;
-                const matchSearch = (m.title || "").toLowerCase().includes(search) || (m.desc || "").toLowerCase().includes(search);
-                const matchGrade = gradeFilter === "ALL" || m.grade === gradeFilter;
-                const matchSem = semFilter === "ALL" || m.semester === semFilter;
-                const matchSubject = subjectFilter === "ALL" || m.subject === subjectFilter;
-                const matchCat = catFilter === "ALL" || m.category === catFilter;
-                return matchSearch && matchGrade && matchSem && matchSubject && matchCat;
+                if (gradeFilter !== "ALL" && m.grade !== gradeFilter) return false;
+                if (semFilter !== "ALL" && m.semester !== semFilter) return false;
+                if (subjectFilter !== "ALL" && m.subject !== subjectFilter) return false;
+                if (catFilter !== "ALL" && m.category !== catFilter) return false;
+                if (search && !((m.title || "").toLowerCase().includes(search) || (m.desc || "").toLowerCase().includes(search))) return false;
+                return true;
             });
 
-            if (sortBy === "LIKES") {
-                filtered.sort((a, b) => (b.likes || 0) - (a.likes || 0));
-            } else if (sortBy === "OLDEST") {
+            if (sortBy === "OLDEST") {
                 filtered.sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
+            } else if (sortBy === "LIKES") {
+                filtered.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+            } else {
+                filtered.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
             }
 
+            if (countElem) countElem.innerText = filtered.length;
+
             if (filtered.length === 0) {
+                grid.innerHTML = "";
                 emptyState.classList.remove("hidden");
                 return;
             } else {
                 emptyState.classList.add("hidden");
             }
 
+            const currentUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).name : null;
+            const fragment = document.createDocumentFragment();
+
             filtered.forEach(item => {
                 const canDelete = currentUser && (currentUser === item.author || currentUser === "Hazem DK S'29");
                 const isBookmarked = bookmarks.includes(item.id);
                 const isLiked = likedPosts.includes(item.id);
 
-                // ألوان مميزة لكل تصنيف (Category Tag)
                 let categoryBadge = '';
                 if (item.category === 'Exams') {
                     categoryBadge = '<span class="text-[11px] font-bold px-2 py-0.5 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">امتحانات</span>';
@@ -621,8 +561,11 @@
                         </div>
                     </div>
                 `;
-                grid.appendChild(card);
+                fragment.appendChild(card);
             });
+
+            grid.innerHTML = "";
+            grid.appendChild(fragment);
         };
 
         window.toggleUploadMethod = function() {
@@ -644,7 +587,6 @@
             }
         };
 
-        // دالة الإرسال مع تحديث اسم الـ Preset إلى STEM_DK_HUB واستخدام auto/upload
         window.handleFormSubmit = async function(event) {
             event.preventDefault();
             const savedUser = localStorage.getItem('user');
@@ -658,6 +600,12 @@
             const userData = JSON.parse(savedUser);
             const authorName = userData.name || "Hazem DK S'29";
             const method = document.getElementById("uploadMethodSelect").value;
+            const titleVal = document.getElementById("titleInput").value.trim();
+
+            const isDuplicate = allMaterials.some(m => (m.title || "").trim().toLowerCase() === titleVal.toLowerCase());
+            if (isDuplicate && !confirm("يوجد ملف بنفس هذا الاسم بالفعل! هل أنت متأكد من رغبتك في رفعه مرة أخرى؟")) {
+                return;
+            }
             
             let finalFileLink = "";
             const submitBtn = document.getElementById("submitBtn");
@@ -689,7 +637,6 @@
                     if (data.secure_url) {
                         finalFileLink = data.secure_url;
                     } else {
-                        console.error("Cloudinary Error:", data);
                         throw new Error(data.error?.message || "فشل الرفع لـ Cloudinary");
                     }
                 } else {
@@ -697,7 +644,7 @@
                 }
 
                 const newMaterial = {
-                    title: document.getElementById("titleInput").value,
+                    title: titleVal,
                     grade: document.getElementById("gradeInput").value,
                     subject: document.getElementById("subjectInput").value,
                     semester: document.getElementById("semesterInput").value,
@@ -714,10 +661,10 @@
                 document.getElementById("materialForm").reset();
                 toggleUploadMethod();
                 toggleModal(false);
-                showToast("تم رفع ونشر الماتريال بنجاح للجميع!");
+                showToast("تم رفع ونشر الماتريال بنجاح!");
             } catch (error) {
                 console.error(error);
-                showToast("حدث خطأ أثناء الرفع، تأكد من إعدادات الـ Unsigned Preset والاتصال.");
+                showToast("حدث خطأ أثناء الرفع، تأكد من الاتصال.");
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerText = "حفظ ونشر مباشر";
@@ -727,10 +674,13 @@
         window.toggleLike = async function(id) {
             let likedPosts = getLikedPosts();
             const docRef = doc(db, "materials", id);
+            const item = allMaterials.find(m => m.id === id);
 
             if (likedPosts.includes(id)) {
                 likedPosts = likedPosts.filter(postId => postId !== id);
                 localStorage.setItem("stem_dk_liked_posts", JSON.stringify(likedPosts));
+                if (item) item.likes = Math.max(0, (item.likes || 1) - 1);
+                renderMaterials();
                 try {
                     await updateDoc(docRef, { likes: increment(-1) });
                     showToast("تم إلغاء الإعجاب");
@@ -738,6 +688,8 @@
             } else {
                 likedPosts.push(id);
                 localStorage.setItem("stem_dk_liked_posts", JSON.stringify(likedPosts));
+                if (item) item.likes = (item.likes || 0) + 1;
+                renderMaterials();
                 try {
                     await updateDoc(docRef, { likes: increment(1) });
                     showToast("تم إضافة الإعجاب ❤️");
@@ -756,11 +708,11 @@
             const btn = document.getElementById("bookmarkFilterBtn");
             if(btn) btn.classList.remove("bg-amber-500/20", "border-amber-500");
             renderMaterials();
-            showToast("تمت إعادة ضبط جميع الفلاتر بنجاح");
+            showToast("تمت إعادة ضبط الفلاتر");
         };
 
         window.deleteMaterial = async function(id) {
-            if (confirm("هل أنت متأكد من إزالة هذه المادة من المنصة للجميع؟")) {
+            if (confirm("هل أنت متأكد من إزالة هذه المادة نهائياً؟")) {
                 try {
                     await deleteDoc(doc(db, "materials", id));
                     showToast("تم حذف المادة بنجاح.");
@@ -797,11 +749,6 @@
                 if(themeIcon) themeIcon.className = 'fa-solid fa-moon text-indigo-400';
             }
         };
-
-        function getBookmarks() {
-            const saved = localStorage.getItem("stem_dk_bookmarks");
-            return saved ? JSON.parse(saved) : [];
-        }
 
         window.toggleBookmark = function(id) {
             let bookmarks = getBookmarks();
@@ -877,12 +824,11 @@
         };
 
         initTheme();
+        initRealtimeListener();
     </script>
 
-    <!-- Google Custom Token Client Auth Logic -->
     <script>
         let tokenClient;
-
         window.addEventListener('DOMContentLoaded', () => {
             const savedUser = localStorage.getItem('user');
             if (savedUser) {
@@ -923,7 +869,6 @@
                 };
                 localStorage.setItem('user', JSON.stringify(userData));
                 showUserProfile(userData);
-                if(window.renderMaterials) window.renderMaterials();
                 showToast("تم تسجيل الدخول بنجاح أهلاً بك يا " + data.name);
             })
             .catch(error => {
